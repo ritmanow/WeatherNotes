@@ -4,11 +4,15 @@ import Foundation
 /// Requests when-in-use location permission and performs a one-shot current location lookup.
 @MainActor
 final class LocationService: NSObject, CLLocationManagerDelegate {
+    /// One shared instance so permission / location work is not torn down while a continuation is pending (e.g. closing the add sheet).
+    static let shared = LocationService()
+
     private let manager: CLLocationManager
     private var authContinuation: CheckedContinuation<CLAuthorizationStatus, Never>?
+    private var authTimeoutTask: Task<Void, Never>?
     private var locationContinuation: CheckedContinuation<CLLocationCoordinate2D?, Never>?
 
-    override init() {
+    private override init() {
         manager = CLLocationManager()
         super.init()
         manager.delegate = self
@@ -28,10 +32,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
         case .denied, .restricted:
             return false
         case .notDetermined:
-            let status = await withCheckedContinuation { (continuation: CheckedContinuation<CLAuthorizationStatus, Never>) in
-                authContinuation = continuation
-                manager.requestWhenInUseAuthorization()
-            }
+            let status = await waitForAuthorizationResolution()
             return status == .authorizedWhenInUse || status == .authorizedAlways
         @unknown default:
             return false
@@ -77,14 +78,38 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
         }
     }
 
+    /// Waits until authorization leaves `.notDetermined` (user choice) or times out.
+    private func waitForAuthorizationResolution() async -> CLAuthorizationStatus {
+        await withCheckedContinuation { (continuation: CheckedContinuation<CLAuthorizationStatus, Never>) in
+            authContinuation = continuation
+            manager.requestWhenInUseAuthorization()
+
+            authTimeoutTask?.cancel()
+            authTimeoutTask = Task { @MainActor in
+                let nanoseconds = UInt64(120 * 1_000_000_000)
+                try? await Task.sleep(nanoseconds: nanoseconds)
+                resumeAuthContinuationIfNeeded(returning: manager.authorizationStatus)
+            }
+        }
+    }
+
+    private func resumeAuthContinuationIfNeeded(returning status: CLAuthorizationStatus) {
+        guard let continuation = authContinuation else { return }
+        authContinuation = nil
+        authTimeoutTask?.cancel()
+        authTimeoutTask = nil
+        continuation.resume(returning: status)
+    }
+
     // MARK: - CLLocationManagerDelegate
 
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         Task { @MainActor in
-            if let continuation = authContinuation {
-                authContinuation = nil
-                continuation.resume(returning: manager.authorizationStatus)
-            }
+            let status = manager.authorizationStatus
+            // iOS can deliver this callback while still `.notDetermined`; resuming then leaks the
+            // continuation (never see the final Allow/Deny). Only resolve once the user decided.
+            guard status != .notDetermined else { return }
+            resumeAuthContinuationIfNeeded(returning: status)
         }
     }
 

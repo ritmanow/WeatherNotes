@@ -131,9 +131,9 @@ final class OpenWeatherWeatherService: WeatherServicing {
             visibilityKm = 0
         }
 
-        let rawWind = response.wind?.speed ?? 0
-        let windSpeed = (rawWind * 10).rounded() / 10
-        let windDirection = response.wind?.deg ?? 0
+        let rawWind = response.wind?.speed?.finiteOrZero ?? 0
+        let windSpeed = ((rawWind * 10).rounded() / 10).finiteOrZero
+        let windDirection = response.wind?.deg?.finiteOrZero ?? 0
 
         let country = response.sys.country?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let locationDisplay: String
@@ -143,9 +143,14 @@ final class OpenWeatherWeatherService: WeatherServicing {
             locationDisplay = "\(response.name), \(country)"
         }
 
+        let temp = response.main.temp.finiteOrZero
+        let feels = response.main.feelsLike.finiteOrZero
+        let lat = response.coord.lat.finiteOrZero
+        let lon = response.coord.lon.finiteOrZero
+
         return WeatherSnapshot(
-            temperature: Int(response.main.temp.rounded()),
-            feelsLike: Int(response.main.feelsLike.rounded()),
+            temperature: Int(temp.rounded()),
+            feelsLike: Int(feels.rounded()),
             weatherDescription: firstWeather.description,
             weatherMain: firstWeather.main.lowercased(),
             owmIconId: firstWeather.icon,
@@ -156,8 +161,8 @@ final class OpenWeatherWeatherService: WeatherServicing {
             windSpeed: windSpeed,
             windDirection: windDirection,
             locationDisplay: locationDisplay,
-            latitude: response.coord.lat,
-            longitude: response.coord.lon
+            latitude: lat,
+            longitude: lon
         )
     }
 
