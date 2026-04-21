@@ -12,19 +12,38 @@ enum WeatherServiceError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .missingAPIKey:
-            return "OpenWeather API key is missing."
+            return "Не налаштовано ключ API OpenWeather."
         case .invalidURL:
-            return "Could not build a valid weather request URL."
+            return "Не вдалося сформувати запит погоди."
         case .network(let urlError):
-            return urlError.localizedDescription
+            return Self.ukrainianMessage(for: urlError)
         case .invalidResponse:
-            return "The server returned an unexpected response."
+            return "Сервер повернув неочікувану відповідь."
         case .httpError(let statusCode, _):
-            return "Weather request failed (HTTP \(statusCode))."
+            return "Запит погоди не вдався (HTTP \(statusCode))."
         case .decodingFailed:
-            return "Could not read the weather response."
+            return "Не вдалося прочитати відповідь про погоду."
         case .missingWeatherPayload:
-            return "The weather response did not include weather details."
+            return "У відповіді немає даних про погоду."
+        }
+    }
+
+    private static func ukrainianMessage(for urlError: URLError) -> String {
+        switch urlError.code {
+        case .notConnectedToInternet:
+            return "Немає підключення до Інтернету."
+        case .timedOut:
+            return "Час очікування мережі вичерпано."
+        case .cannotFindHost, .dnsLookupFailed:
+            return "Не вдалося знайти сервер погоди."
+        case .networkConnectionLost, .dataNotAllowed:
+            return "З’єднання з мережею втрачено."
+        case .secureConnectionFailed:
+            return "Не вдалося встановити захищене з’єднання."
+        case .cancelled:
+            return "Запит скасовано."
+        default:
+            return "Помилка мережі. Перевірте підключення та спробуйте ще раз."
         }
     }
 
@@ -51,8 +70,8 @@ final class OpenWeatherWeatherService: WeatherServicing {
             self.session = session
         } else {
             let configuration = URLSessionConfiguration.ephemeral
-            configuration.timeoutIntervalForRequest = 30
-            configuration.timeoutIntervalForResource = 60
+            configuration.timeoutIntervalForRequest = 12
+            configuration.timeoutIntervalForResource = 20
             self.session = URLSession(configuration: configuration)
         }
         self.decoder = JSONDecoder()
