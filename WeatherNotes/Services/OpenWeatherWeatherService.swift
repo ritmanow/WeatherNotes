@@ -70,8 +70,8 @@ final class OpenWeatherWeatherService: WeatherServicing {
             self.session = session
         } else {
             let configuration = URLSessionConfiguration.ephemeral
-            configuration.timeoutIntervalForRequest = 30
-            configuration.timeoutIntervalForResource = 60
+            configuration.timeoutIntervalForRequest = 12
+            configuration.timeoutIntervalForResource = 20
             self.session = URLSession(configuration: configuration)
         }
         self.decoder = JSONDecoder()

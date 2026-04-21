@@ -20,7 +20,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
     }
 
     /// Returns the current coordinate, or `nil` if permission is denied/restricted, lookup fails, or `timeoutSeconds` elapses.
-    func requestCoordinateOrNil(timeoutSeconds: TimeInterval = 15) async -> CLLocationCoordinate2D? {
+    func requestCoordinateOrNil(timeoutSeconds: TimeInterval = 8) async -> CLLocationCoordinate2D? {
         guard await ensureWhenInUseAccess() else { return nil }
         return await fetchCoordinateOnce(timeoutSeconds: timeoutSeconds)
     }
@@ -86,7 +86,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
 
             authTimeoutTask?.cancel()
             authTimeoutTask = Task { @MainActor in
-                let nanoseconds = UInt64(120 * 1_000_000_000)
+                let nanoseconds = UInt64(20 * 1_000_000_000)
                 try? await Task.sleep(nanoseconds: nanoseconds)
                 resumeAuthContinuationIfNeeded(returning: manager.authorizationStatus)
             }
