@@ -44,6 +44,7 @@ struct NotesListView: View {
                     .listStyle(.plain)
                     .scrollContentBackground(.hidden)
                     .listRowSpacing(8)
+                    .padding(.top, 12)
                 }
             }
             .toolbarBackground(.hidden, for: .navigationBar)

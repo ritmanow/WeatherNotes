@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct NoteDetailView: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let note: WeatherNote
 
     private let metricColumns = [
@@ -92,7 +94,13 @@ struct NoteDetailView: View {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(style.gradient)
         )
-        .shadow(color: .black.opacity(0.12), radius: 8, y: 4)
+        .overlay {
+            if colorScheme == .dark {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color.black.opacity(0.22))
+            }
+        }
+        .shadow(color: .black.opacity(colorScheme == .dark ? 0.35 : 0.12), radius: 8, y: 4)
     }
 
     private var metricsGrid: some View {
