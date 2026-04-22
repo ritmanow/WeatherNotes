@@ -1,28 +1,173 @@
 import CoreData
 import SwiftUI
 
-// MARK: - Figma AddNote (node 1:163) design tokens (SF Pro, ~393pt canvas)
+// MARK: - AddNoteScreen palette (Figma light 1:161 / 1:233 / 1:305, dark 1:853 / 1:925 / 1:997)
 
-private enum AddNoteStyle {
-    static let pageBG = Color(uiColor: .systemGroupedBackground)
-    static let textPrimary = Color.primary
-    static let textSecondary = Color(uiColor: .secondaryLabel)
-    static let textMuted = Color(uiColor: .tertiaryLabel)
-    static let labelGray = Color(uiColor: .label)
-    static let borderLight = Color(uiColor: .separator).opacity(0.35)
-    static let borderHeader = Color(uiColor: .separator)
-    static let primaryBlue = Color(red: 0.169, green: 0.498, blue: 1) // #2b7fff
-    static let pinCircle = Color(red: 0.86, green: 0.918, blue: 0.996) // #dbeafe
-    static let infoBorder = Color(red: 0.86, green: 0.918, blue: 0.996) // #dbeafe
-    static let infoDivider = Color(red: 0.745, green: 0.86, blue: 1) // #bedbff
-    static let tipsBG = Color(red: 0.95, green: 0.95, blue: 0.96) // #f3f4f6
-    static let gradientStart = Color(red: 0.937, green: 0.965, blue: 1) // #eff6ff
-    static let gradientEnd = Color(red: 0.933, green: 0.949, blue: 1) // #eef2ff
+private enum AddNoteColors {
+    static func canvas(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 16 / 255, green: 24 / 255, blue: 40 / 255)
+            : Color(red: 249 / 255, green: 250 / 255, blue: 251 / 255)
+    }
+
+    static func headerBar(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 30 / 255, green: 41 / 255, blue: 57 / 255)
+            : Color.white
+    }
+
+    static func headerDivider(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 54 / 255, green: 65 / 255, blue: 83 / 255)
+            : Color(red: 229 / 255, green: 231 / 255, blue: 235 / 255)
+    }
+
+    static func cardFill(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 30 / 255, green: 41 / 255, blue: 57 / 255)
+            : Color.white
+    }
+
+    static func cardBorder(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 54 / 255, green: 65 / 255, blue: 83 / 255)
+            : Color(red: 243 / 255, green: 244 / 255, blue: 246 / 255)
+    }
+
+    static func primaryText(_ scheme: ColorScheme) -> Color {
+        scheme == .dark ? Color.white : Color(red: 16 / 255, green: 24 / 255, blue: 40 / 255)
+    }
+
+    static func activityFieldLabel(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255)
+            : Color(red: 74 / 255, green: 85 / 255, blue: 101 / 255)
+    }
+
+    static func placeholder(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 106 / 255, green: 114 / 255, blue: 130 / 255)
+            : Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255)
+    }
+
+    static func characterCount(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 106 / 255, green: 114 / 255, blue: 130 / 255)
+            : Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255)
+    }
+
+    static func secondaryLabel(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255)
+            : Color(red: 106 / 255, green: 114 / 255, blue: 130 / 255)
+    }
+
+    static func tipsTitle(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 209 / 255, green: 213 / 255, blue: 220 / 255)
+            : Color(red: 54 / 255, green: 65 / 255, blue: 83 / 255)
+    }
+
+    static func tipsBody(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255)
+            : Color(red: 74 / 255, green: 85 / 255, blue: 101 / 255)
+    }
+
+    static func tipsBullet(_ scheme: ColorScheme) -> Color {
+        Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255)
+    }
+
+    static func tipsCardBackground(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 30 / 255, green: 41 / 255, blue: 57 / 255)
+            : Color(red: 243 / 255, green: 244 / 255, blue: 246 / 255)
+    }
+
+    static func accentBlue(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 21 / 255, green: 93 / 255, blue: 252 / 255)
+            : Color(red: 43 / 255, green: 127 / 255, blue: 1)
+    }
+
+    /// Save CTA: light #2b7fff — dark #155dfc.
+    static func saveButtonFill(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 21 / 255, green: 93 / 255, blue: 252 / 255)
+            : Color(red: 43 / 255, green: 127 / 255, blue: 1)
+    }
+
+    static func cardShadow(_ scheme: ColorScheme) -> Color {
+        scheme == .dark ? Color.white.opacity(0.08) : Color.black.opacity(0.1)
+    }
+
+    static func infoGradient(_ scheme: ColorScheme) -> [Color] {
+        if scheme == .dark {
+            return [
+                Color(red: 28 / 255, green: 57 / 255, blue: 142 / 255).opacity(0.2),
+                Color(red: 49 / 255, green: 44 / 255, blue: 133 / 255).opacity(0.2),
+            ]
+        }
+        return [
+            Color(red: 239 / 255, green: 246 / 255, blue: 255 / 255),
+            Color(red: 238 / 255, green: 242 / 255, blue: 255 / 255),
+        ]
+    }
+
+    static func infoCardBorder(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 25 / 255, green: 60 / 255, blue: 184 / 255)
+            : Color(red: 219 / 255, green: 234 / 255, blue: 254 / 255)
+    }
+
+    static func infoDivider(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 25 / 255, green: 60 / 255, blue: 184 / 255)
+            : Color(red: 190 / 255, green: 219 / 255, blue: 255 / 255)
+    }
+
+    static func infoPinWell(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 25 / 255, green: 60 / 255, blue: 184 / 255).opacity(0.5)
+            : Color(red: 219 / 255, green: 234 / 255, blue: 254 / 255)
+    }
+
+    static func infoPinIcon(_ scheme: ColorScheme) -> Color {
+        scheme == .dark ? Color.white : Color(red: 43 / 255, green: 127 / 255, blue: 1)
+    }
+
+    static func infoTitle(_ scheme: ColorScheme) -> Color {
+        scheme == .dark ? Color.white : Color(red: 16 / 255, green: 24 / 255, blue: 40 / 255)
+    }
+
+    static func infoBodySecondary(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255)
+            : Color(red: 74 / 255, green: 85 / 255, blue: 101 / 255)
+    }
+
+    static func infoBodyEmphasis(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255)
+            : Color(red: 16 / 255, green: 24 / 255, blue: 40 / 255)
+    }
+
+    static func infoBulletLabel(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255)
+            : Color(red: 74 / 255, green: 85 / 255, blue: 101 / 255)
+    }
+
+    static func bulletDot(_ scheme: ColorScheme) -> Color {
+        Color(red: 43 / 255, green: 127 / 255, blue: 1)
+    }
 }
 
 struct AddNoteView: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.colorScheme) private var systemColorScheme
+
+    @AppStorage(ThemePreference.storageKey) private var themeRaw = ThemePreference.system.rawValue
 
     @StateObject private var viewModel: AddNoteViewModel
     @State private var text = ""
@@ -53,43 +198,59 @@ struct AddNoteView: View {
         )
     }
 
-    private var isDarkMode: Bool { colorScheme == .dark }
-
-    var body: some View {
-        VStack(spacing: 0) {
-            addNoteHeader
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    if viewModel.isSaving {
-                        HStack(alignment: .center, spacing: 12) {
-                            ProgressView()
-                            Text(L10n.string("add_note.loading"))
-                                .font(.subheadline)
-                                .foregroundStyle(AddNoteStyle.textSecondary)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    inputCard
-                    if let message = viewModel.errorMessage, !message.isEmpty {
-                        Text(message)
-                            .font(.footnote)
-                            .foregroundStyle(.red)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal, 2)
-                    }
-                    infoCard
-                    tipsCard
-                }
-                .padding(.horizontal, 24)
-                .padding(.top, 24)
-                .padding(.bottom, 16)
-            }
-            saveFooter
-        }
-        .background(AddNoteStyle.pageBG.ignoresSafeArea())
+    private var themePreference: ThemePreference {
+        ThemePreference(rawValue: themeRaw) ?? .system
     }
 
-    // MARK: - Header (back + title, white bar, bottom border, shadow)
+    /// Aligns with the in-app theme toggle; sheets do not always inherit `preferredColorScheme` from the presenter (visible as wrong sheet chrome on some devices).
+    private var colorScheme: ColorScheme {
+        switch themePreference {
+        case .system: systemColorScheme
+        case .light: .light
+        case .dark: .dark
+        }
+    }
+
+    var body: some View {
+        ZStack(alignment: .top) {
+            AddNoteColors.canvas(colorScheme)
+                .ignoresSafeArea(edges: .all)
+            VStack(spacing: 0) {
+                addNoteHeader
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        if viewModel.isSaving {
+                            HStack(alignment: .center, spacing: 12) {
+                                ProgressView()
+                                Text(L10n.string("add_note.loading"))
+                                    .font(.subheadline)
+                                    .foregroundStyle(AddNoteColors.secondaryLabel(colorScheme))
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        inputCard
+                        if let message = viewModel.errorMessage, !message.isEmpty {
+                            Text(message)
+                                .font(.footnote)
+                                .foregroundStyle(.red)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 2)
+                        }
+                        infoCard
+                        tipsCard
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.top, 24)
+                    .padding(.bottom, 16)
+                }
+                saveFooter
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .preferredColorScheme(themePreference.colorScheme)
+    }
+
+    // MARK: - Header (back + title, Figma bar + divider + shadow)
 
     private var addNoteHeader: some View {
         HStack(alignment: .center, spacing: 16) {
@@ -99,7 +260,7 @@ struct AddNoteView: View {
                 ZStack {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(AddNoteStyle.primaryBlue)
+                        .foregroundStyle(AddNoteColors.accentBlue(colorScheme))
                 }
                 .frame(width: 40, height: 40)
             }
@@ -108,7 +269,7 @@ struct AddNoteView: View {
 
             Text(L10n.string("add_note.title"))
                 .font(.system(size: 20, weight: .semibold, design: .default))
-                .foregroundStyle(AddNoteStyle.textPrimary)
+                .foregroundStyle(AddNoteColors.primaryText(colorScheme))
                 .tracking(-0.45)
             Spacer(minLength: 0)
         }
@@ -116,10 +277,10 @@ struct AddNoteView: View {
         .padding(.top, 20)
         .padding(.bottom, 20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(uiColor: .systemBackground))
+        .background(AddNoteColors.headerBar(colorScheme))
         .overlay(alignment: .bottom) {
             Rectangle()
-                .fill(AddNoteStyle.borderHeader)
+                .fill(AddNoteColors.headerDivider(colorScheme))
                 .frame(height: 0.5)
         }
         .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
@@ -129,16 +290,18 @@ struct AddNoteView: View {
     // MARK: - Input card
 
     private var inputCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        let shadow = AddNoteColors.cardShadow(colorScheme)
+        return VStack(alignment: .leading, spacing: 12) {
             Text(L10n.string("add_note.field.activity_label"))
                 .font(.system(size: 14, weight: .medium, design: .default))
-                .foregroundStyle(AddNoteStyle.textSecondary)
+                .foregroundStyle(AddNoteColors.activityFieldLabel(colorScheme))
                 .tracking(-0.15)
 
             ZStack(alignment: .topLeading) {
                 TextEditor(text: boundedNoteText)
                     .font(.system(size: 18, weight: .regular, design: .default))
-                    .foregroundStyle(AddNoteStyle.textPrimary)
+                    .foregroundStyle(AddNoteColors.primaryText(colorScheme))
+                    .tracking(-0.44)
                     .textInputAutocapitalization(.sentences)
                     .focused($isTextEditorFocused)
                     .scrollContentBackground(.hidden)
@@ -148,7 +311,8 @@ struct AddNoteView: View {
                 if text.isEmpty {
                     Text(L10n.string("add_note.field.note.placeholder"))
                         .font(.system(size: 18, weight: .regular, design: .default))
-                        .foregroundStyle(AddNoteStyle.textMuted)
+                        .foregroundStyle(AddNoteColors.placeholder(colorScheme))
+                        .tracking(-0.44)
                         .padding(.top, 8)
                         .padding(.leading, 5)
                         .allowsHitTesting(false)
@@ -160,7 +324,7 @@ struct AddNoteView: View {
             HStack {
                 Text("\(text.count)/\(maxLength)")
                     .font(.system(size: 12, weight: .regular, design: .default))
-                    .foregroundStyle(AddNoteStyle.textMuted)
+                    .foregroundStyle(AddNoteColors.characterCount(colorScheme))
                 Spacer()
             }
         }
@@ -168,41 +332,42 @@ struct AddNoteView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color(uiColor: .systemBackground))
+                .fill(AddNoteColors.cardFill(colorScheme))
         )
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(AddNoteStyle.borderLight, lineWidth: 0.67)
+                .strokeBorder(AddNoteColors.cardBorder(colorScheme), lineWidth: 0.67)
         )
-        .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
-        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+        .shadow(color: shadow, radius: 1, x: 0, y: 1)
+        .shadow(color: shadow, radius: 2, x: 0, y: 1)
     }
 
-    // MARK: - Info card (gradient, pin, dynamic highlight)
+    // MARK: - Info card (gradient, pin, grid)
 
     private var infoCard: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(alignment: .top, spacing: 12) {
                 ZStack {
                     Circle()
-                        .fill(AddNoteStyle.pinCircle)
+                        .fill(AddNoteColors.infoPinWell(colorScheme))
                     Image(systemName: "mappin.and.ellipse")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(AddNoteStyle.primaryBlue)
+                        .symbolRenderingMode(.monochrome)
+                        .foregroundStyle(AddNoteColors.infoPinIcon(colorScheme))
                 }
                 .frame(width: 40, height: 40)
                 VStack(alignment: .leading, spacing: 4) {
                     Text(L10n.string("add_note.info.title"))
                         .font(.system(size: 14, weight: .medium, design: .default))
-                        .foregroundStyle(infoCardTextColor)
+                        .foregroundStyle(AddNoteColors.infoTitle(colorScheme))
                         .tracking(-0.15)
                     infoCardBodyText
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
             Rectangle()
-                .fill(AddNoteStyle.infoDivider)
-                .frame(height: 0.5)
+                .fill(AddNoteColors.infoDivider(colorScheme))
+                .frame(height: 0.67)
             infoBulletGrid
         }
         .padding(20)
@@ -211,7 +376,7 @@ struct AddNoteView: View {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(
                     LinearGradient(
-                        colors: infoGradientColors,
+                        colors: AddNoteColors.infoGradient(colorScheme),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
@@ -219,7 +384,7 @@ struct AddNoteView: View {
         )
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(infoCardBorderColor, lineWidth: 0.67)
+                .strokeBorder(AddNoteColors.infoCardBorder(colorScheme), lineWidth: 0.67)
         )
     }
 
@@ -227,13 +392,16 @@ struct AddNoteView: View {
         let h = viewModel.infoCardLocationHighlight
         let body = Text(L10n.string("add_note.info.body.prefix"))
             .font(.system(size: 14, weight: .regular, design: .default))
-            .foregroundStyle(infoCardSecondaryTextColor)
+            .foregroundStyle(AddNoteColors.infoBodySecondary(colorScheme))
+            .tracking(-0.15)
         let mid = Text(h)
             .font(.system(size: 14, weight: .semibold, design: .default))
-            .foregroundStyle(infoCardTextColor)
+            .foregroundStyle(AddNoteColors.infoBodyEmphasis(colorScheme))
+            .tracking(-0.15)
         let tail = Text(L10n.string("add_note.info.body.suffix"))
             .font(.system(size: 14, weight: .regular, design: .default))
-            .foregroundStyle(infoCardSecondaryTextColor)
+            .foregroundStyle(AddNoteColors.infoBodySecondary(colorScheme))
+            .tracking(-0.15)
         return body + mid + tail
     }
 
@@ -258,12 +426,12 @@ struct AddNoteView: View {
     private func infoRow(_ label: String) -> some View {
         HStack(alignment: .top, spacing: 8) {
             RoundedRectangle(cornerRadius: 2)
-                .fill(AddNoteStyle.primaryBlue)
+                .fill(AddNoteColors.bulletDot(colorScheme))
                 .frame(width: 6, height: 6)
                 .padding(.top, 5)
             Text(label)
                 .font(.system(size: 12, weight: .regular, design: .default))
-                .foregroundStyle(infoCardSecondaryTextColor)
+                .foregroundStyle(AddNoteColors.infoBulletLabel(colorScheme))
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -276,7 +444,7 @@ struct AddNoteView: View {
                 Text("💡")
                 Text(L10n.string("add_note.tips.title"))
                     .font(.system(size: 12, weight: .medium, design: .default))
-                    .foregroundStyle(AddNoteStyle.labelGray)
+                    .foregroundStyle(AddNoteColors.tipsTitle(colorScheme))
             }
             VStack(alignment: .leading, spacing: 6) {
                 tipsLine("•", L10n.string("add_note.tips.activity"))
@@ -288,7 +456,7 @@ struct AddNoteView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color(uiColor: .secondarySystemBackground))
+                .fill(AddNoteColors.tipsCardBackground(colorScheme))
         )
     }
 
@@ -296,19 +464,19 @@ struct AddNoteView: View {
         HStack(alignment: .top, spacing: 8) {
             Text(bullet)
                 .font(.system(size: 12, weight: .regular, design: .default))
-                .foregroundStyle(AddNoteStyle.textMuted)
+                .foregroundStyle(AddNoteColors.tipsBullet(colorScheme))
             Text(line)
                 .font(.system(size: 12, weight: .regular, design: .default))
-                .foregroundStyle(AddNoteStyle.textSecondary)
+                .foregroundStyle(AddNoteColors.tipsBody(colorScheme))
         }
     }
 
-    // MARK: - Footer (save, disabled opacity 0.5)
+    // MARK: - Footer (save)
 
     private var saveFooter: some View {
         VStack(spacing: 0) {
             Rectangle()
-                .fill(AddNoteStyle.borderHeader)
+                .fill(AddNoteColors.headerDivider(colorScheme))
                 .frame(height: 0.5)
             Button {
                 Task {
@@ -324,13 +492,14 @@ struct AddNoteView: View {
                 Text(L10n.string("common.action.save"))
                     .font(.system(size: 16, weight: .medium, design: .default))
                     .foregroundStyle(.white)
+                    .tracking(-0.31)
                     .frame(maxWidth: .infinity)
                     .frame(minHeight: 56)
             }
             .buttonStyle(.plain)
             .background(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(AddNoteStyle.primaryBlue)
+                    .fill(AddNoteColors.saveButtonFill(colorScheme))
             )
             .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
             .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
@@ -341,33 +510,11 @@ struct AddNoteView: View {
             .padding(.bottom, 12)
         }
         .frame(maxWidth: .infinity)
-        .background(Color(uiColor: .systemBackground))
+        .background(AddNoteColors.headerBar(colorScheme))
     }
 
     private var saveButtonEnabled: Bool {
         !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-
-    private var infoGradientColors: [Color] {
-        if isDarkMode {
-            return [
-                Color(red: 0.18, green: 0.23, blue: 0.33),
-                Color(red: 0.15, green: 0.20, blue: 0.29),
-            ]
-        }
-        return [AddNoteStyle.gradientStart, AddNoteStyle.gradientEnd]
-    }
-
-    private var infoCardBorderColor: Color {
-        isDarkMode ? Color.white.opacity(0.15) : AddNoteStyle.infoBorder
-    }
-
-    private var infoCardTextColor: Color {
-        isDarkMode ? .white : AddNoteStyle.textPrimary
-    }
-
-    private var infoCardSecondaryTextColor: Color {
-        isDarkMode ? .white.opacity(0.85) : AddNoteStyle.textSecondary
     }
 }
 
