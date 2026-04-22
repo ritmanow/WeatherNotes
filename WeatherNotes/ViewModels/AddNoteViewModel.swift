@@ -85,6 +85,10 @@ final class AddNoteViewModel: ObservableObject {
         }
     }
 
+    func clearError() {
+        errorMessage = nil
+    }
+
     private func ukrainianUserMessage(for error: Error) -> String {
         if let weather = error as? WeatherServiceError {
             return weather.errorDescription ?? L10n.string("add_note.error.weather_fallback")
