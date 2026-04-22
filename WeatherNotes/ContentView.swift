@@ -5,11 +5,14 @@
 //  Created by Yurii on 21.04.2026.
 //
 
+import CoreData
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.managedObjectContext) private var managedObjectContext
+
     var body: some View {
-        NotesListView()
+        NotesListView(managedObjectContext: managedObjectContext)
     }
 }
 

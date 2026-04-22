@@ -13,7 +13,7 @@ struct WeatherNotesApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NotesListView()
+            NotesListView(managedObjectContext: persistenceController.container.viewContext)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

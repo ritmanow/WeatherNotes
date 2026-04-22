@@ -96,13 +96,13 @@ struct NotesListView: View {
 
     @AppStorage(ThemePreference.storageKey) private var themeRaw = ThemePreference.system.rawValue
 
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \WeatherNote.createdAt, ascending: false)],
-        animation: .default
-    )
-    private var notes: FetchedResults<WeatherNote>
+    @StateObject private var listViewModel: NotesListViewModel
 
     @State private var isPresentingAdd = false
+
+    init(managedObjectContext: NSManagedObjectContext) {
+        _listViewModel = StateObject(wrappedValue: NotesListViewModel(viewContext: managedObjectContext))
+    }
 
     private var themePreference: ThemePreference {
         ThemePreference(rawValue: themeRaw) ?? .system
@@ -115,7 +115,7 @@ struct NotesListView: View {
                     .ignoresSafeArea()
                 VStack(spacing: 0) {
                     listHeader
-                    if notes.isEmpty {
+                    if listViewModel.isEmpty {
                         emptyStateView
                     } else {
                         listContent
@@ -135,19 +135,21 @@ struct NotesListView: View {
     }
 
     private var listContent: some View {
-            List {
-                ForEach(notes) { note in
-                    NavigationLink {
-                        NoteDetailView(note: note)
-                    } label: {
-                        NoteRowView(note: note)
-                    }
+        List {
+            ForEach(listViewModel.notes) { note in
+                NavigationLink {
+                    NoteDetailView(note: note)
+                } label: {
+                    NoteRowView(note: note, listViewModel: listViewModel)
+                }
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                 .listRowSeparator(.hidden)
                 .listRowBackground(NoteCardChrome())
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                     Button(role: .destructive) {
-                        deleteNote(note)
+                        withAnimation {
+                            listViewModel.delete(note)
+                        }
                     } label: {
                         Label(L10n.string("notes_list.action.delete"), systemImage: "trash")
                     }
@@ -169,7 +171,7 @@ struct NotesListView: View {
                     .font(.system(size: 24, weight: .semibold, design: .default))
                     .foregroundStyle(ListColors.primaryText(colorScheme))
                     .tracking(0.07)
-                Text(noteCountSubtitle(notes.count))
+                Text(listViewModel.noteCountSubtitle(for: listViewModel.notes.count))
                     .font(.system(size: 14, weight: .regular, design: .default))
                     .foregroundStyle(ListColors.secondaryText(colorScheme))
                     .tracking(-0.15)
@@ -258,39 +260,6 @@ struct NotesListView: View {
         }
     }
 
-    private func noteCountSubtitle(_ count: Int) -> String {
-        let lang = Locale.current.language.languageCode?.identifier ?? "uk"
-        let word: String
-        if lang == "en" {
-            word = (count == 1)
-                ? L10n.string("notes_list.count.note.one")
-                : L10n.string("notes_list.count.note.many")
-        } else {
-            let n10 = count % 10
-            let n100 = count % 100
-            if (11...14).contains(n100) {
-                word = L10n.string("notes_list.count.note.many")
-            } else if n10 == 1 {
-                word = L10n.string("notes_list.count.note.one")
-            } else if (2...4).contains(n10) {
-                word = L10n.string("notes_list.count.note.few")
-            } else {
-                word = L10n.string("notes_list.count.note.many")
-            }
-        }
-        return "\(count) \(word)"
-    }
-
-    private func deleteNote(_ note: WeatherNote) {
-        withAnimation {
-            viewContext.delete(note)
-            do {
-                try viewContext.save()
-            } catch {
-                // Intentionally quiet; Core Data save errors are rare for deletes in-app.
-            }
-        }
-    }
 }
 
 // MARK: - Note card chrome (Figma: 16pt radius, border #f3f4f6, soft elevation)
@@ -315,6 +284,7 @@ private struct NoteRowView: View {
     @Environment(\.colorScheme) private var colorScheme
 
     let note: WeatherNote
+    @ObservedObject var listViewModel: NotesListViewModel
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -327,19 +297,20 @@ private struct NoteRowView: View {
                 if let createdAt = note.createdAt {
                     dateMetaRow(createdAt)
                 }
-                if !conditionString(for: note).isEmpty {
-                    Text(conditionString(for: note))
+                let apiLine = listViewModel.listConditionLine(for: note)
+                if !apiLine.isEmpty {
+                    Text(apiLine)
                         .font(.system(size: 14, weight: .regular, design: .default))
                         .foregroundStyle(ListColors.listCardCondition(colorScheme))
                 }
             }
             Spacer(minLength: 8)
             VStack(alignment: .trailing, spacing: 8) {
-                Image(systemName: symbolName(for: note.weatherMain ?? ""))
+                Image(systemName: listViewModel.symbolName(for: note.weatherMain ?? ""))
                     .font(.system(size: 40, weight: .regular))
                     .symbolRenderingMode(.monochrome)
                     .foregroundStyle(ListColors.addButton(colorScheme))
-                Text("\(listTemperature(note))°")
+                Text("\(listViewModel.listTemperature(for: note))°")
                     .font(.system(size: 24, weight: .semibold, design: .default))
                     .foregroundStyle(ListColors.primaryText(colorScheme))
                     .monospacedDigit()
@@ -353,63 +324,19 @@ private struct NoteRowView: View {
 
     private func dateMetaRow(_ date: Date) -> some View {
         HStack(spacing: 8) {
-            Text(relativeDayLabel(for: date))
+            Text(listViewModel.relativeDayLabel(for: date))
             Text("•")
                 .foregroundStyle(ListColors.bullet(colorScheme))
-            Text(timePortion(date))
+            Text(listViewModel.timePortion(for: date))
         }
         .font(.system(size: 14, weight: .regular, design: .default))
         .foregroundStyle(ListColors.secondaryText(colorScheme))
         .tracking(-0.15)
     }
-
-    private func relativeDayLabel(for date: Date) -> String {
-        let cal = Calendar.current
-        if cal.isDateInToday(date) { return L10n.string("common.relative.today") }
-        if cal.isDateInYesterday(date) { return L10n.string("common.relative.yesterday") }
-        return date.formatted(
-            .dateTime.day().month(.abbreviated)
-                .locale(.autoupdatingCurrent)
-        )
-    }
-
-    private func timePortion(_ date: Date) -> String {
-        date.formatted(
-            .dateTime.hour().minute()
-                .locale(.autoupdatingCurrent)
-        )
-    }
-
-    private func conditionString(for note: WeatherNote) -> String {
-        WeatherConditionDisplay.phrase(
-            apiDescription: note.weatherDescription ?? "",
-            weatherMain: note.weatherMain ?? ""
-        )
-    }
-
-    private func listTemperature(_ note: WeatherNote) -> Int {
-        let t = note.temperature
-        guard t.isFinite else { return 0 }
-        return Int(t.rounded())
-    }
-
-    private func symbolName(for weatherMain: String) -> String {
-        switch weatherMain.lowercased() {
-        case "clear": return "sun.max"
-        case "clouds": return "cloud"
-        case "rain": return "cloud.rain"
-        case "drizzle": return "cloud.drizzle"
-        case "thunderstorm": return "cloud.bolt.rain"
-        case "snow": return "cloud.snow"
-        case "mist", "fog", "haze": return "cloud.fog"
-        case "smoke", "dust", "sand", "ash", "squall", "tornado": return "wind"
-        default: return "cloud.sun"
-        }
-    }
 }
 
 #Preview {
     @Previewable @State var persistence = PersistenceController.preview
-    NotesListView()
+    NotesListView(managedObjectContext: persistence.container.viewContext)
         .environment(\.managedObjectContext, persistence.container.viewContext)
 }
