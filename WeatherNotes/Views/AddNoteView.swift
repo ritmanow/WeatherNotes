@@ -1,15 +1,35 @@
 import CoreData
 import SwiftUI
 
+// MARK: - Figma AddNote (node 1:163) design tokens (SF Pro, ~393pt canvas)
+
+private enum AddNoteStyle {
+    static let pageBG = Color(uiColor: .systemGroupedBackground)
+    static let textPrimary = Color.primary
+    static let textSecondary = Color(uiColor: .secondaryLabel)
+    static let textMuted = Color(uiColor: .tertiaryLabel)
+    static let labelGray = Color(uiColor: .label)
+    static let borderLight = Color(uiColor: .separator).opacity(0.35)
+    static let borderHeader = Color(uiColor: .separator)
+    static let primaryBlue = Color(red: 0.169, green: 0.498, blue: 1) // #2b7fff
+    static let pinCircle = Color(red: 0.86, green: 0.918, blue: 0.996) // #dbeafe
+    static let infoBorder = Color(red: 0.86, green: 0.918, blue: 0.996) // #dbeafe
+    static let infoDivider = Color(red: 0.745, green: 0.86, blue: 1) // #bedbff
+    static let tipsBG = Color(red: 0.95, green: 0.95, blue: 0.96) // #f3f4f6
+    static let gradientStart = Color(red: 0.937, green: 0.965, blue: 1) // #eff6ff
+    static let gradientEnd = Color(red: 0.933, green: 0.949, blue: 1) // #eef2ff
+}
+
 struct AddNoteView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
 
     @StateObject private var viewModel: AddNoteViewModel
     @State private var text = ""
-    @FocusState private var isNoteFieldFocused: Bool
+    @FocusState private var isTextEditorFocused: Bool
 
     private let onSaved: () -> Void
+
     private let maxLength = 200
 
     init(context: NSManagedObjectContext, onSaved: @escaping () -> Void) {
@@ -33,162 +53,162 @@ struct AddNoteView: View {
         )
     }
 
+    private var isDarkMode: Bool { colorScheme == .dark }
+
     var body: some View {
-        NavigationStack {
-            ZStack(alignment: .bottom) {
-                Color(.systemGroupedBackground)
-                    .ignoresSafeArea()
-
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        if viewModel.isSaving {
-                            loadingBlock
+        VStack(spacing: 0) {
+            addNoteHeader
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    if viewModel.isSaving {
+                        HStack(alignment: .center, spacing: 12) {
+                            ProgressView()
+                            Text("Отримуємо погоду та зберігаємо...")
+                                .font(.subheadline)
+                                .foregroundStyle(AddNoteStyle.textSecondary)
                         }
-
-                        if let message = viewModel.errorMessage, !message.isEmpty {
-                            errorBanner(message)
-                        }
-
-                        inputCard
-                        infoCard
-                        tipsCard
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 16)
-                    .padding(.top, 12)
-                    .padding(.bottom, 12)
-                }
-            }
-            .navigationTitle("Нова нотатка")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Скасувати") {
-                        dismiss()
+                    inputCard
+                    if let message = viewModel.errorMessage, !message.isEmpty {
+                        Text(message)
+                            .font(.footnote)
+                            .foregroundStyle(.red)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 2)
                     }
+                    infoCard
+                    tipsCard
                 }
+                .padding(.horizontal, 24)
+                .padding(.top, 24)
+                .padding(.bottom, 16)
             }
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                bottomSaveBar
-            }
+            saveFooter
         }
+        .background(AddNoteStyle.pageBG.ignoresSafeArea())
     }
 
-    // MARK: - Blocks
+    // MARK: - Header (back + title, white bar, bottom border, shadow)
 
-    private var loadingBlock: some View {
-        HStack(alignment: .center, spacing: 12) {
-            ProgressView()
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Отримуємо погоду та зберігаємо...")
-                    .font(.subheadline.weight(.medium))
-                if !viewModel.weatherSourceHint.isEmpty {
-                    Text(viewModel.weatherSourceHint)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+    private var addNoteHeader: some View {
+        HStack(alignment: .center, spacing: 16) {
+            Button {
+                dismiss()
+            } label: {
+                ZStack {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(AddNoteStyle.primaryBlue)
                 }
+                .frame(width: 40, height: 40)
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Назад")
+
+            Text("Нова нотатка")
+                .font(.system(size: 20, weight: .semibold, design: .default))
+                .foregroundStyle(AddNoteStyle.textPrimary)
+                .tracking(-0.45)
             Spacer(minLength: 0)
         }
-        .padding(14)
+        .padding(.horizontal, 24)
+        .padding(.top, 20)
+        .padding(.bottom, 20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color(.secondarySystemGroupedBackground))
-        )
+        .background(Color(uiColor: .systemBackground))
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(AddNoteStyle.borderHeader)
+                .frame(height: 0.5)
+        }
+        .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
     }
 
-    private func errorBanner(_ message: String) -> some View {
-        Text(message)
-            .font(.footnote)
-            .foregroundStyle(.red)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(12)
-            .background(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color(.systemRed).opacity(colorScheme == .dark ? 0.18 : 0.10))
-            )
-    }
+    // MARK: - Input card
 
     private var inputCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Текст нотатки")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.primary)
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Що ви робили?")
+                .font(.system(size: 14, weight: .medium, design: .default))
+                .foregroundStyle(AddNoteStyle.textSecondary)
+                .tracking(-0.15)
 
             ZStack(alignment: .topLeading) {
+                TextEditor(text: boundedNoteText)
+                    .font(.system(size: 18, weight: .regular, design: .default))
+                    .foregroundStyle(AddNoteStyle.textPrimary)
+                    .textInputAutocapitalization(.sentences)
+                    .focused($isTextEditorFocused)
+                    .scrollContentBackground(.hidden)
+                    .frame(minHeight: 150)
+                    .accessibilityLabel("Нотатка")
+                    .contentShape(Rectangle())
                 if text.isEmpty {
-                    Text("Опишіть, що відбувається…")
-                        .foregroundStyle(.tertiary)
+                    Text("напр. пробіжка, дорога в офіс, прогулянка у парку…")
+                        .font(.system(size: 18, weight: .regular, design: .default))
+                        .foregroundStyle(AddNoteStyle.textMuted)
                         .padding(.top, 8)
-                        .padding(.leading, 6)
+                        .padding(.leading, 5)
                         .allowsHitTesting(false)
                 }
-                TextEditor(text: boundedNoteText)
-                    .focused($isNoteFieldFocused)
-                    .font(.body)
-                    .scrollContentBackground(.hidden)
-                    .frame(minHeight: 120, maxHeight: 220)
             }
-            .padding(8)
-            .background(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color(.systemBackground))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .strokeBorder(Color(.separator).opacity(0.55), lineWidth: 0.5)
-            )
-            .contentShape(Rectangle())
             .onTapGesture {
-                isNoteFieldFocused = true
+                isTextEditorFocused = true
             }
-
             HStack {
-                Spacer()
                 Text("\(text.count)/\(maxLength)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(.system(size: 12, weight: .regular, design: .default))
+                    .foregroundStyle(AddNoteStyle.textMuted)
+                Spacer()
             }
         }
-        .padding(16)
+        .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color(.secondarySystemGroupedBackground))
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color(uiColor: .systemBackground))
         )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(AddNoteStyle.borderLight, lineWidth: 0.67)
+        )
+        .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
     }
 
+    // MARK: - Info card (gradient, pin, dynamic highlight)
+
     private var infoCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top, spacing: 10) {
-                Image(systemName: "mappin.circle.fill")
-                    .font(.title2)
-                    .symbolRenderingMode(.palette)
-                    .foregroundStyle(Color.accentColor, Color(.secondarySystemFill))
-                VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(alignment: .top, spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(AddNoteStyle.pinCircle)
+                    Image(systemName: "mappin.and.ellipse")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(AddNoteStyle.primaryBlue)
+                }
+                .frame(width: 40, height: 40)
+                VStack(alignment: .leading, spacing: 4) {
                     Text("Автоматичний знімок погоди")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.primary)
-                    Text("Погода підтягується автоматично для поточної локації (або Київ, якщо геолокація недоступна).")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .font(.system(size: 14, weight: .medium, design: .default))
+                        .foregroundStyle(infoCardTextColor)
+                        .tracking(-0.15)
+                    infoCardBodyText
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
-
-            Divider()
-                .overlay(Color(.separator))
-
-            VStack(alignment: .leading, spacing: 8) {
-                bulletRow("До 200 символів на нотатку.")
-                bulletRow("Під час збереження показуємо джерело локації.")
-                bulletRow("Помилки мережі — зрозумілі повідомлення українською.")
-            }
+            Rectangle()
+                .fill(AddNoteStyle.infoDivider)
+                .frame(height: 0.5)
+            infoBulletGrid
         }
-        .padding(16)
+        .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(
                     LinearGradient(
                         colors: infoGradientColors,
@@ -198,60 +218,98 @@ struct AddNoteView: View {
                 )
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .strokeBorder(infoBorderColor, lineWidth: 1)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(infoCardBorderColor, lineWidth: 0.67)
         )
     }
 
-    private var infoGradientColors: [Color] {
-        if colorScheme == .dark {
-            return [
-                Color(red: 0.10, green: 0.14, blue: 0.24),
-                Color(red: 0.12, green: 0.12, blue: 0.20),
-            ]
+    private var infoCardBodyText: Text {
+        let h = viewModel.infoCardLocationHighlight
+        let body = Text("Погодні дані для ")
+            .font(.system(size: 14, weight: .regular, design: .default))
+            .foregroundStyle(infoCardSecondaryTextColor)
+        let mid = Text(h)
+            .font(.system(size: 14, weight: .semibold, design: .default))
+            .foregroundStyle(infoCardTextColor)
+        let tail = Text(" будуть отримано та збережено разом з нотаткою.")
+            .font(.system(size: 14, weight: .regular, design: .default))
+            .foregroundStyle(infoCardSecondaryTextColor)
+        return body + mid + tail
+    }
+
+    private var infoBulletGrid: some View {
+        let columns = [GridItem(.flexible(), spacing: 8), GridItem(.flexible(), spacing: 8)]
+        return LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
+            ForEach(infoGridRows, id: \.self) { row in
+                infoRow(row)
+            }
         }
-        return [
-            Color(red: 0.94, green: 0.97, blue: 1.0),
-            Color(red: 0.93, green: 0.95, blue: 1.0),
+    }
+
+    private var infoGridRows: [String] {
+        [
+            "Температура та умови",
+            "Вологість і тиск",
+            "Швидкість і напрям вітру",
+            "Видимість і хмарність",
         ]
     }
 
-    private var infoBorderColor: Color {
-        colorScheme == .dark ? Color(.separator) : Color(red: 0.86, green: 0.92, blue: 0.99)
-    }
-
-    private func bulletRow(_ line: String) -> some View {
+    private func infoRow(_ label: String) -> some View {
         HStack(alignment: .top, spacing: 8) {
-            Circle()
-                .fill(Color.accentColor)
+            RoundedRectangle(cornerRadius: 2)
+                .fill(AddNoteStyle.primaryBlue)
                 .frame(width: 6, height: 6)
                 .padding(.top, 5)
-            Text(line)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(label)
+                .font(.system(size: 12, weight: .regular, design: .default))
+                .foregroundStyle(infoCardSecondaryTextColor)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
+    // MARK: - Tips card
+
     private var tipsCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Поради")
-                .font(.subheadline.weight(.semibold))
-            Text("Переконайтеся, що є інтернет і (за бажанням) дозвіл на геолокацію — так прогноз буде точнішим.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 4) {
+                Text("💡")
+                Text("Підказки")
+                    .font(.system(size: 12, weight: .medium, design: .default))
+                    .foregroundStyle(AddNoteStyle.labelGray)
+            }
+            VStack(alignment: .leading, spacing: 6) {
+                tipsLine("•", "Опишіть свою активність детальніше")
+                tipsLine("•", "Погодні дані знімаються в момент збереження")
+                tipsLine("•", "Нотатки зберігаються на вашому пристрої")
+            }
         }
-        .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color(.tertiarySystemGroupedBackground))
+                .fill(Color(uiColor: .secondarySystemBackground))
         )
     }
 
-    private var bottomSaveBar: some View {
+    private func tipsLine(_ bullet: String, _ line: String) -> some View {
+        HStack(alignment: .top, spacing: 8) {
+            Text(bullet)
+                .font(.system(size: 12, weight: .regular, design: .default))
+                .foregroundStyle(AddNoteStyle.textMuted)
+            Text(line)
+                .font(.system(size: 12, weight: .regular, design: .default))
+                .foregroundStyle(AddNoteStyle.textSecondary)
+        }
+    }
+
+    // MARK: - Footer (save, disabled opacity 0.5)
+
+    private var saveFooter: some View {
         VStack(spacing: 0) {
-            Divider()
+            Rectangle()
+                .fill(AddNoteStyle.borderHeader)
+                .frame(height: 0.5)
             Button {
                 Task {
                     let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -263,28 +321,53 @@ struct AddNoteView: View {
                     }
                 }
             } label: {
-                Text("Зберегти нотатку")
-                    .font(.body.weight(.semibold))
+                Text("Зберегти")
+                    .font(.system(size: 16, weight: .medium, design: .default))
+                    .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
+                    .frame(minHeight: 56)
             }
             .buttonStyle(.plain)
-            .foregroundStyle(.white)
             .background(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color.accentColor)
+                    .fill(AddNoteStyle.primaryBlue)
             )
-            .opacity((saveButtonEnabled && !viewModel.isSaving) ? 1 : 0.45)
-            .padding(.horizontal, 16)
-            .padding(.top, 10)
-            .padding(.bottom, 10)
-            .background(Color(.systemBackground))
+            .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
+            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+            .opacity(saveButtonEnabled && !viewModel.isSaving ? 1 : 0.5)
             .disabled(!saveButtonEnabled || viewModel.isSaving)
+            .padding(.horizontal, 24)
+            .padding(.top, 24)
+            .padding(.bottom, 12)
         }
+        .frame(maxWidth: .infinity)
+        .background(Color(uiColor: .systemBackground))
     }
 
     private var saveButtonEnabled: Bool {
         !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    private var infoGradientColors: [Color] {
+        if isDarkMode {
+            return [
+                Color(red: 0.18, green: 0.23, blue: 0.33),
+                Color(red: 0.15, green: 0.20, blue: 0.29),
+            ]
+        }
+        return [AddNoteStyle.gradientStart, AddNoteStyle.gradientEnd]
+    }
+
+    private var infoCardBorderColor: Color {
+        isDarkMode ? Color.white.opacity(0.15) : AddNoteStyle.infoBorder
+    }
+
+    private var infoCardTextColor: Color {
+        isDarkMode ? .white : AddNoteStyle.textPrimary
+    }
+
+    private var infoCardSecondaryTextColor: Color {
+        isDarkMode ? .white.opacity(0.85) : AddNoteStyle.textSecondary
     }
 }
 
