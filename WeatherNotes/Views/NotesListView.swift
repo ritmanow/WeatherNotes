@@ -1,6 +1,21 @@
 import CoreData
 import SwiftUI
 
+// MARK: - Figma ListScreen (node 1:5) palette
+
+private enum ListPalette {
+    static let screenBackground = Color(uiColor: .systemGroupedBackground)
+    static let textPrimary = Color.primary
+    static let textSecondary = Color.secondary
+    static let textCondition = Color(uiColor: .secondaryLabel)
+    static let borderHeader = Color(uiColor: .separator)
+    static let borderCard = Color(uiColor: .separator).opacity(0.35)
+    static let bullet = Color(uiColor: .tertiaryLabel)
+    static let themeButtonFill = Color(uiColor: .tertiarySystemFill)
+    static let addButton = Color(red: 43 / 255, green: 127 / 255, blue: 1) // #2b7fff
+    static let white = Color(uiColor: .systemBackground)
+}
+
 struct NotesListView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
@@ -21,30 +36,15 @@ struct NotesListView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(.systemGroupedBackground)
+                ListPalette.screenBackground
                     .ignoresSafeArea()
                 VStack(spacing: 0) {
                     listHeader
-                    List {
-                        ForEach(notes) { note in
-                            NavigationLink {
-                                NoteDetailView(note: note)
-                            } label: {
-                                NoteRowView(note: note)
-                            }
-                            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-                            .listRowSeparator(.hidden)
-                            .listRowBackground(
-                                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                    .fill(Color(.secondarySystemGroupedBackground))
-                            )
-                        }
-                        .onDelete(perform: deleteNotes)
+                    if notes.isEmpty {
+                        emptyStateView
+                    } else {
+                        listContent
                     }
-                    .listStyle(.plain)
-                    .scrollContentBackground(.hidden)
-                    .listRowSpacing(8)
-                    .padding(.top, 12)
                 }
             }
             .toolbarBackground(.hidden, for: .navigationBar)
@@ -57,50 +57,120 @@ struct NotesListView: View {
         .preferredColorScheme(themePreference.colorScheme)
     }
 
-    private var listHeader: some View {
-        HStack(alignment: .center, spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Погодні нотатки")
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(.primary)
-                Text(noteCountSubtitle(notes.count))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+    private var listContent: some View {
+        List {
+            ForEach(notes) { note in
+                NavigationLink {
+                    NoteDetailView(note: note)
+                } label: {
+                    NoteRowView(note: note)
+                }
+                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .listRowSeparator(.hidden)
+                .listRowBackground(NoteCardChrome())
             }
-            Spacer(minLength: 8)
-            headerCircleButton(
-                systemName: themePreference.toolbarIconName,
-                accessibilityLabel: themePreference.accessibilityLabel
-            ) {
-                themeRaw = themePreference.next().rawValue
-            }
-            headerCircleButton(systemName: "plus", accessibilityLabel: "Додати нотатку") {
-                isPresentingAdd = true
-            }
+            .onDelete(perform: deleteNotes)
         }
-        .padding(.horizontal, 20)
-        .padding(.top, 6)
-        .padding(.bottom, 10)
-        .background(Color(.systemGroupedBackground))
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .listRowSpacing(16)
+        .padding(.top, 12)
     }
 
-    private func headerCircleButton(
-        systemName: String,
-        accessibilityLabel label: String,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button(action: action) {
-            Image(systemName: systemName)
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(.primary)
+    // MARK: Header (Figma: white bar, 1px border #e5e7eb, soft shadow)
+
+    private var listHeader: some View {
+        HStack(alignment: .center, spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Погодні нотатки")
+                    .font(.system(size: 24, weight: .semibold, design: .default))
+                    .foregroundStyle(ListPalette.textPrimary)
+                    .tracking(0.07)
+                Text(noteCountSubtitle(notes.count))
+                    .font(.system(size: 14, weight: .regular, design: .default))
+                    .foregroundStyle(ListPalette.textSecondary)
+                    .tracking(-0.15)
+            }
+            Spacer(minLength: 8)
+            headerThemeButton
+            headerAddButton
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 8)
+        .padding(.bottom, 20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(ListPalette.white)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(ListPalette.borderHeader)
+                .frame(maxWidth: .infinity, maxHeight: 0.5)
+        }
+        .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+    }
+
+    private var headerThemeButton: some View {
+        Button {
+            themeRaw = themePreference.next().rawValue
+        } label: {
+            Image(systemName: themePreference.toolbarIconName)
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(ListPalette.textPrimary)
                 .frame(width: 44, height: 44)
-                .background {
-                    Circle()
-                        .fill(Color(.secondarySystemGroupedBackground))
-                }
+                .background(Circle().fill(ListPalette.themeButtonFill))
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(label)
+        .accessibilityLabel(themePreference.accessibilityLabel)
+        .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+    }
+
+    private var headerAddButton: some View {
+        Button {
+            isPresentingAdd = true
+        } label: {
+            Image(systemName: "plus")
+                .font(.system(size: 24, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 48, height: 48)
+                .background(Circle().fill(ListPalette.addButton))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Додати нотатку")
+        .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 4)
+        .shadow(color: .black.opacity(0.1), radius: 15, x: 0, y: 10)
+    }
+
+    // MARK: Empty state (Ukrainian)
+
+    private var emptyStateView: some View {
+        VStack {
+            Spacer(minLength: 32)
+            ZStack {
+                NoteCardChrome()
+                VStack(spacing: 16) {
+                    Image(systemName: "note.text.badge.plus")
+                        .font(.system(size: 48, weight: .regular))
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(ListPalette.textSecondary)
+                    Text("Ще немає нотаток")
+                        .font(.system(size: 18, weight: .semibold, design: .default))
+                        .foregroundStyle(ListPalette.textPrimary)
+                        .multilineTextAlignment(.center)
+                    Text("Натисніть кнопку з «+» у правому верхньому куті, щоб створити нотатку з погодою.")
+                        .font(.system(size: 14, weight: .regular, design: .default))
+                        .foregroundStyle(ListPalette.textSecondary)
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(2)
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 32)
+            }
+            .frame(minHeight: 220)
+            .padding(.horizontal, 16)
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func noteCountSubtitle(_ count: Int) -> String {
@@ -131,31 +201,93 @@ struct NotesListView: View {
     }
 }
 
+// MARK: - Note card chrome (Figma: 16pt radius, border #f3f4f6, soft elevation)
+
+private struct NoteCardChrome: View {
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(ListPalette.white)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(ListPalette.borderCard, lineWidth: 0.5)
+        }
+        .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+    }
+}
+
 private struct NoteRowView: View {
     let note: WeatherNote
 
     var body: some View {
-        HStack(alignment: .center, spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text(note.text ?? "")
+                    .font(.system(size: 18, weight: .medium, design: .default))
+                    .foregroundStyle(ListPalette.textPrimary)
                     .lineLimit(2)
+                    .tracking(-0.44)
                 if let createdAt = note.createdAt {
-                    Text(createdAt, format: Date.FormatStyle(date: .abbreviated, time: .shortened))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    dateMetaRow(createdAt)
+                }
+                if !conditionString(for: note).isEmpty {
+                    Text(conditionString(for: note).localizedCapitalized)
+                        .font(.system(size: 14, weight: .regular, design: .default))
+                        .foregroundStyle(ListPalette.textCondition)
                 }
             }
             Spacer(minLength: 8)
-            HStack(spacing: 6) {
-                Text("\(listTemperature(note))°")
-                    .font(.subheadline.monospacedDigit())
+            VStack(alignment: .trailing, spacing: 8) {
                 Image(systemName: symbolName(for: note.weatherMain ?? ""))
+                    .font(.system(size: 32, weight: .regular))
                     .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(ListPalette.addButton)
+                Text("\(listTemperature(note))°")
+                    .font(.system(size: 24, weight: .semibold, design: .default))
+                    .foregroundStyle(ListPalette.textPrimary)
+                    .monospacedDigit()
+                    .tracking(0.07)
             }
         }
-        .padding(.vertical, 10)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 20)
         .accessibilityElement(children: .combine)
+    }
+
+    private func dateMetaRow(_ date: Date) -> some View {
+        HStack(spacing: 8) {
+            Text(relativeDayLabel(for: date))
+            Text("•")
+                .foregroundStyle(ListPalette.bullet)
+            Text(timePortion(date))
+        }
+        .font(.system(size: 14, weight: .regular, design: .default))
+        .foregroundStyle(ListPalette.textSecondary)
+        .tracking(-0.15)
+    }
+
+    private func relativeDayLabel(for date: Date) -> String {
+        let cal = Calendar.current
+        if cal.isDateInToday(date) { return "Сьогодні" }
+        if cal.isDateInYesterday(date) { return "Вчора" }
+        return date.formatted(
+            .dateTime.day().month(.abbreviated)
+                .locale(Locale(identifier: "uk_UA"))
+        )
+    }
+
+    private func timePortion(_ date: Date) -> String {
+        date.formatted(
+            .dateTime.hour().minute()
+                .locale(Locale(identifier: "uk_UA"))
+        )
+    }
+
+    private func conditionString(for note: WeatherNote) -> String {
+        let desc = (note.weatherDescription ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        if !desc.isEmpty { return desc.localizedLowercase }
+        let main = (note.weatherMain ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        return main.localizedLowercase
     }
 
     private func listTemperature(_ note: WeatherNote) -> Int {

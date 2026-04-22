@@ -1,14 +1,28 @@
 import SwiftUI
 
 struct NoteDetailView: View {
-    @Environment(\.colorScheme) private var colorScheme
-
     let note: WeatherNote
 
     private let metricColumns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12),
     ]
+
+    /// Design tokens (Figma DetailScreen 1:380 — light baseline; cards use system background for dark mode).
+    private enum Tok {
+        static let canvas = Color(uiColor: .systemGroupedBackground)
+        static let primaryText = Color.primary
+        static let label = Color(uiColor: .secondaryLabel)
+        static let meta = Color.secondary
+        static let bullet = Color(uiColor: .tertiaryLabel)
+        static let cardBorder = Color(uiColor: .separator).opacity(0.35)
+        static let stripBorder = Color(uiColor: .separator)
+        static let humidityTint = Color(red: 239 / 255, green: 246 / 255, blue: 255 / 255)
+        static let visibilityTint = Color(red: 250 / 255, green: 245 / 255, blue: 255 / 255)
+        static let pressureTint = Color(red: 255 / 255, green: 247 / 255, blue: 237 / 255)
+        static let cloudsTint = Color(red: 249 / 255, green: 250 / 255, blue: 251 / 255)
+        static let windTint = Color(red: 240 / 255, green: 253 / 255, blue: 250 / 255)
+    }
 
     var body: some View {
         ScrollView {
@@ -17,113 +31,135 @@ struct NoteDetailView: View {
                 weatherHeroCard
                 metricsGrid
                 windCard
-                coordinatesCard
+                coordinatesStrip
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
         }
-        .background(Color(.systemGroupedBackground))
-        .navigationTitle("Нотатка")
+        .background(Tok.canvas)
+        .navigationTitle("Деталі нотатки")
         .navigationBarTitleDisplayMode(.inline)
     }
 
     // MARK: - Cards
 
     private var noteCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             Text(note.text ?? "")
-                .font(.body)
+                .font(.system(size: 24, weight: .semibold))
+                .foregroundStyle(Tok.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
             if let createdAt = note.createdAt {
-                Text(createdAt, format: Date.FormatStyle(date: .long, time: .shortened))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                noteMetaRow(date: createdAt)
             }
-            Text("Локація: \(note.locationDisplay ?? "—")")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
         }
-        .padding(16)
+        .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(cardBackground)
+        .background(whiteCardChrome(cornerRadius: 16))
+    }
+
+    private func noteMetaRow(date: Date) -> some View {
+        HStack(spacing: 8) {
+            Text(noteMetaLeading(date: date))
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(Tok.meta)
+            Text("•")
+                .font(.system(size: 14, weight: .regular))
+                .foregroundStyle(Tok.bullet)
+            Text(noteMetaTime(date: date))
+                .font(.system(size: 14, weight: .regular))
+                .foregroundStyle(Tok.meta)
+        }
     }
 
     private var weatherHeroCard: some View {
         let style = heroStyle(for: note.weatherMain ?? "")
-        return VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Погода")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.85))
-                    Text(note.weatherDescription ?? "—")
-                        .font(.title3.weight(.medium))
-                        .foregroundStyle(.white)
+        let loc = note.locationDisplay ?? "—"
+        let condition = (note.weatherDescription ?? "—").capitalized
+        let feels = safeIntDegrees(note.feelsLike)
+
+        return ZStack(alignment: .topTrailing) {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(spacing: 8) {
+                    Image(systemName: "mappin.circle.fill")
+                        .font(.system(size: 20))
+                        .foregroundStyle(.white.opacity(0.95))
+                    Text(loc)
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.95))
+                        .lineLimit(2)
                 }
-                Spacer(minLength: 8)
-                Image(systemName: style.symbolName)
-                    .font(.system(size: 40))
-                    .symbolRenderingMode(.hierarchical)
+                .padding(.bottom, 16)
+
+                Text("\(safeIntDegrees(note.temperature))°")
+                    .font(.system(size: 72, weight: .light))
+                    .tracking(0.12)
+                    .foregroundStyle(.white)
+                    .minimumScaleFactor(0.55)
+                    .lineLimit(1)
+
+                Text(condition)
+                    .font(.system(size: 20, weight: .regular))
                     .foregroundStyle(.white.opacity(0.95))
+                    .padding(.top, 4)
+
+                Text("Відчувається як \(feels)°")
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundStyle(.white.opacity(0.8))
+                    .padding(.top, 4)
             }
-            HStack(alignment: .firstTextBaseline, spacing: 20) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Температура")
-                        .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.8))
-                    Text("\(safeIntDegrees(note.temperature))°C")
-                        .font(.title.weight(.semibold))
-                        .monospacedDigit()
-                        .foregroundStyle(.white)
-                }
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Відчувається як")
-                        .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.8))
-                    Text("\(safeIntDegrees(note.feelsLike))°C")
-                        .font(.title3.weight(.medium))
-                        .monospacedDigit()
-                        .foregroundStyle(.white)
-                }
-                Spacer(minLength: 0)
-            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            Image(systemName: style.symbolName)
+                .font(.system(size: 88))
+                .symbolRenderingMode(.hierarchical)
+                .foregroundStyle(.white.opacity(0.88))
+                .offset(x: 4, y: 8)
+                .accessibilityHidden(true)
         }
-        .padding(18)
+        .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(style.gradient)
         )
-        .overlay {
-            if colorScheme == .dark {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color.black.opacity(0.22))
-            }
-        }
-        .shadow(color: .black.opacity(colorScheme == .dark ? 0.35 : 0.12), radius: 8, y: 4)
+        .shadow(color: .black.opacity(0.1), radius: 20, x: 0, y: 10)
+        .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 4)
     }
 
     private var metricsGrid: some View {
         LazyVGrid(columns: metricColumns, spacing: 12) {
             metricTile(
                 title: "Вологість",
-                value: "\(note.humidity)%",
-                systemImage: "humidity.fill"
+                mainValue: "\(note.humidity)",
+                unit: "%",
+                systemImage: "humidity.fill",
+                iconTint: Tok.humidityTint,
+                iconColor: Color(red: 43 / 255, green: 127 / 255, blue: 255 / 255)
             )
             metricTile(
                 title: "Видимість",
-                value: formatVisibility(note.visibilityKm),
-                systemImage: "eye.fill"
+                mainValue: visibilityMainText(note.visibilityKm),
+                unit: visibilityUnitText(note.visibilityKm),
+                systemImage: "eye.fill",
+                iconTint: Tok.visibilityTint,
+                iconColor: Color(red: 147 / 255, green: 51 / 255, blue: 234 / 255)
             )
             metricTile(
                 title: "Тиск",
-                value: "\(note.pressure) hPa",
-                systemImage: "gauge.with.dots.needle.67percent"
+                mainValue: "\(note.pressure)",
+                unit: " гПа",
+                systemImage: "gauge.with.dots.needle.67percent",
+                iconTint: Tok.pressureTint,
+                iconColor: Color(red: 234 / 255, green: 88 / 255, blue: 12 / 255)
             )
             metricTile(
                 title: "Хмарність",
-                value: "\(note.clouds)%",
-                systemImage: "cloud.fill"
+                mainValue: "\(note.clouds)",
+                unit: "%",
+                systemImage: "cloud.fill",
+                iconTint: Tok.cloudsTint,
+                iconColor: Color(red: 107 / 255, green: 114 / 255, blue: 128 / 255)
             )
         }
     }
@@ -131,83 +167,211 @@ struct NoteDetailView: View {
     private var windCard: some View {
         let deg = note.windDirection
         let cardinal = WindDirection.cardinalSymbol(degrees: deg)
-        return VStack(alignment: .leading, spacing: 12) {
-            Label("Вітер", systemImage: "wind")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.primary)
-            HStack(alignment: .top, spacing: 16) {
+        let speed = note.windSpeed.finiteOrZero
+
+        return VStack(alignment: .leading, spacing: 20) {
+            HStack(alignment: .center, spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Tok.windTint)
+                        .frame(width: 48, height: 48)
+                    Image(systemName: "wind")
+                        .font(.system(size: 22, weight: .medium))
+                        .foregroundStyle(Color(red: 13 / 255, green: 148 / 255, blue: 136 / 255))
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Вітер")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(Tok.primaryText)
+                    Text("Швидкість і напрямок")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundStyle(Tok.meta)
+                }
+            }
+
+            HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Швидкість")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text(String(format: "%.1f м/с", note.windSpeed.finiteOrZero))
-                        .font(.body.monospacedDigit().weight(.medium))
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundStyle(Tok.meta)
+                    windValueLine(main: String(format: "%.1f", speed), unit: "м/с")
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Напрямок")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text("\(safeIntDegrees(deg))° · \(cardinal)")
-                        .font(.body.monospacedDigit().weight(.medium))
+
+                HStack(alignment: .center, spacing: 12) {
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text("Напрямок")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundStyle(Tok.meta)
+                        windDirectionValue(degrees: deg, cardinal: cardinal)
+                    }
+                    windCompass(degrees: deg)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
-        .padding(16)
+        .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(cardBackground)
+        .background(whiteCardChrome(cornerRadius: 16))
     }
 
-    private var coordinatesCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Координати")
-                .font(.subheadline.weight(.semibold))
-            HStack(spacing: 16) {
-                coordinatePill(label: "Широта", value: formatCoord(note.latitude))
-                coordinatePill(label: "Довгота", value: formatCoord(note.longitude))
-            }
-        }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(cardBackground)
-    }
-
-    // MARK: - Subviews / style
-
-    private var cardBackground: some View {
-        RoundedRectangle(cornerRadius: 14, style: .continuous)
-            .fill(Color(.secondarySystemGroupedBackground))
-    }
-
-    private func metricTile(title: String, value: String, systemImage: String) -> some View {
+    private var coordinatesStrip: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Image(systemName: systemImage)
-                .font(.title3)
-                .foregroundStyle(.secondary)
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Text(value)
-                .font(.body.weight(.semibold))
-                .monospacedDigit()
-                .lineLimit(2)
-                .minimumScaleFactor(0.8)
+            Text("Координати локації")
+                .font(.system(size: 12, weight: .medium))
+                .foregroundStyle(Tok.meta)
+            HStack {
+                coordinateInline(label: "Широта", value: formatCoordDegrees(note.latitude))
+                Spacer(minLength: 16)
+                coordinateInline(label: "Довгота", value: formatCoordDegrees(note.longitude))
+            }
         }
-        .padding(14)
-        .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
-        .background(cardBackground)
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color(uiColor: .secondarySystemBackground),
+                            Color(uiColor: .tertiarySystemBackground),
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(Tok.stripBorder, lineWidth: 1)
+                )
+        )
     }
 
-    private func coordinatePill(label: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(label)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-            Text(value)
-                .font(.subheadline.monospacedDigit().weight(.medium))
+    // MARK: - Subviews / chrome
+
+    private func whiteCardChrome(cornerRadius: CGFloat) -> some View {
+        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+            .fill(Color(.systemBackground))
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .stroke(Tok.cardBorder, lineWidth: 1)
+            )
+            .shadow(color: .black.opacity(0.1), radius: 1.5, x: 0, y: 1)
+            .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+    }
+
+    private func metricTile(
+        title: String,
+        mainValue: String,
+        unit: String,
+        systemImage: String,
+        iconTint: Color,
+        iconColor: Color
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(iconTint)
+                        .frame(width: 40, height: 40)
+                    Image(systemName: systemImage)
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundStyle(iconColor)
+                }
+                Text(title)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(Tok.label)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.85)
+            }
+            metricValueText(main: mainValue, unit: unit)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)
+        .background(whiteCardChrome(cornerRadius: 16))
+    }
+
+    private func metricValueText(main: String, unit: String) -> Text {
+        let mainFont = Font.system(size: 30, weight: .semibold)
+        let unitFont = Font.system(size: 18, weight: .semibold)
+        if unit == "%" {
+            return Text(main + unit)
+                .font(mainFont)
+                .foregroundStyle(Tok.primaryText)
+                .monospacedDigit()
+        }
+        if unit.isEmpty {
+            return Text(main)
+                .font(mainFont)
+                .foregroundStyle(Tok.primaryText)
+                .monospacedDigit()
+        }
+        return Text(main)
+            .font(mainFont)
+            .foregroundStyle(Tok.primaryText)
+            .monospacedDigit()
+        + Text(unit)
+            .font(unitFont)
+            .foregroundStyle(Tok.primaryText)
+    }
+
+    private func windValueLine(main: String, unit: String) -> some View {
+        (Text(main)
+            .font(.system(size: 30, weight: .semibold))
+            .foregroundStyle(Tok.primaryText)
+            .monospacedDigit()
+        + Text(unit)
+            .font(.system(size: 18, weight: .semibold))
+            .foregroundStyle(Tok.primaryText))
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
+    }
+
+    private func windDirectionValue(degrees: Double, cardinal: String) -> some View {
+        Group {
+            if degrees.isFinite {
+                (Text("\(safeIntDegrees(degrees))°")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(Tok.primaryText)
+                    .monospacedDigit()
+                + Text(" · ")
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundStyle(Tok.meta)
+                + Text(cardinal)
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundStyle(Tok.primaryText))
+            } else {
+                Text("—")
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundStyle(Tok.primaryText)
+            }
+        }
+        .multilineTextAlignment(.trailing)
+    }
+
+    private func windCompass(degrees: Double) -> some View {
+        ZStack {
+            Circle()
+                .fill(Tok.windTint)
+                .frame(width: 48, height: 48)
+            Image(systemName: "location.north.fill")
+                .font(.system(size: 22, weight: .medium))
+                .foregroundStyle(Color(red: 13 / 255, green: 148 / 255, blue: 136 / 255))
+                .rotationEffect(.degrees(degrees.isFinite ? degrees : 0))
+                .accessibilityLabel("Напрямок вітру")
+        }
+    }
+
+    private func coordinateInline(label: String, value: String) -> some View {
+        (Text("\(label): ")
+            .font(.system(size: 14, weight: .regular))
+            .foregroundStyle(Tok.label)
+        + Text(value)
+            .font(.system(size: 14, weight: .semibold, design: .monospaced))
+            .foregroundStyle(Tok.primaryText))
+        .lineLimit(1)
+        .minimumScaleFactor(0.75)
     }
 
     private func heroStyle(for weatherMain: String) -> (gradient: LinearGradient, symbolName: String) {
@@ -225,17 +389,7 @@ struct NoteDetailView: View {
                 "sun.max.fill"
             )
         case "clouds":
-            return (
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.45, green: 0.52, blue: 0.62),
-                        Color(red: 0.32, green: 0.38, blue: 0.48),
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                "cloud.fill"
-            )
+            return (grayMistHeroGradient, "cloud.fill")
         case "rain", "drizzle":
             return (
                 LinearGradient(
@@ -273,38 +427,41 @@ struct NoteDetailView: View {
                 "cloud.snow.fill"
             )
         case "mist", "fog", "haze":
-            return (
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.55, green: 0.58, blue: 0.60),
-                        Color(red: 0.40, green: 0.42, blue: 0.44),
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                "cloud.fog.fill"
-            )
+            return (grayMistHeroGradient, "cloud.fog.fill")
         default:
-            return (
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.40, green: 0.48, blue: 0.62),
-                        Color(red: 0.55, green: 0.60, blue: 0.72),
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                "cloud.sun.fill"
-            )
+            return (grayMistHeroGradient, "cloud.sun.fill")
         }
+    }
+
+    private var grayMistHeroGradient: LinearGradient {
+        LinearGradient(
+            stops: [
+                .init(color: Color(red: 209 / 255, green: 213 / 255, blue: 220 / 255), location: 0),
+                .init(color: Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255), location: 0.5),
+                .init(color: Color(red: 106 / 255, green: 114 / 255, blue: 130 / 255), location: 1),
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
     }
 
     // MARK: - Formatting (existing guards)
 
-    private func formatVisibility(_ km: Double) -> String {
+    private func visibilityMainText(_ km: Double) -> String {
         let v = km.finiteOrZero
         if v <= 0 { return "—" }
-        return String(format: "%.0f км", v)
+        return String(format: "%.0f", v)
+    }
+
+    private func visibilityUnitText(_ km: Double) -> String {
+        let v = km.finiteOrZero
+        if v <= 0 { return "" }
+        return " км"
+    }
+
+    private func formatCoordDegrees(_ value: Double) -> String {
+        guard value.isFinite else { return "—" }
+        return String(format: "%.4f°", value)
     }
 
     private func safeIntDegrees(_ value: Double) -> Int {
@@ -312,8 +469,14 @@ struct NoteDetailView: View {
         return Int(value.rounded())
     }
 
-    private func formatCoord(_ value: Double) -> String {
-        guard value.isFinite else { return "—" }
-        return String(format: "%.4f", value)
+    private func noteMetaLeading(date: Date) -> String {
+        let cal = Calendar.current
+        if cal.isDateInToday(date) { return "Сьогодні" }
+        if cal.isDateInYesterday(date) { return "Вчора" }
+        return date.formatted(.dateTime.day().month(.wide))
+    }
+
+    private func noteMetaTime(date: Date) -> String {
+        date.formatted(Date.FormatStyle(date: .omitted, time: .shortened))
     }
 }
