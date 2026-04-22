@@ -37,7 +37,7 @@ struct NoteDetailView: View {
             .padding(.vertical, 16)
         }
         .background(Tok.canvas)
-        .navigationTitle("Деталі нотатки")
+        .navigationTitle(L10n.string("note_detail.title"))
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -74,8 +74,11 @@ struct NoteDetailView: View {
 
     private var weatherHeroCard: some View {
         let style = heroStyle(for: note.weatherMain ?? "")
-        let loc = note.locationDisplay ?? "—"
-        let condition = (note.weatherDescription ?? "—").capitalized
+        let loc = LocationDisplayFormatting.displayString(note.locationDisplay ?? "—")
+        let condition = WeatherConditionDisplay.phrase(
+            apiDescription: note.weatherDescription ?? "",
+            weatherMain: note.weatherMain ?? ""
+        )
         let feels = safeIntDegrees(note.feelsLike)
 
         return ZStack(alignment: .topTrailing) {
@@ -103,7 +106,7 @@ struct NoteDetailView: View {
                     .foregroundStyle(.white.opacity(0.95))
                     .padding(.top, 4)
 
-                Text("Відчувається як \(feels)°")
+                Text(L10n.format("note_detail.hero.feels_like_format", feels as CVarArg))
                     .font(.system(size: 16, weight: .regular))
                     .foregroundStyle(.white.opacity(0.8))
                     .padding(.top, 4)
@@ -130,7 +133,7 @@ struct NoteDetailView: View {
     private var metricsGrid: some View {
         LazyVGrid(columns: metricColumns, spacing: 12) {
             metricTile(
-                title: "Вологість",
+                title: L10n.string("note_detail.metric.humidity"),
                 mainValue: "\(note.humidity)",
                 unit: "%",
                 systemImage: "humidity.fill",
@@ -138,7 +141,7 @@ struct NoteDetailView: View {
                 iconColor: Color(red: 43 / 255, green: 127 / 255, blue: 255 / 255)
             )
             metricTile(
-                title: "Видимість",
+                title: L10n.string("note_detail.metric.visibility"),
                 mainValue: visibilityMainText(note.visibilityKm),
                 unit: visibilityUnitText(note.visibilityKm),
                 systemImage: "eye.fill",
@@ -146,15 +149,15 @@ struct NoteDetailView: View {
                 iconColor: Color(red: 147 / 255, green: 51 / 255, blue: 234 / 255)
             )
             metricTile(
-                title: "Тиск",
+                title: L10n.string("note_detail.metric.pressure"),
                 mainValue: "\(note.pressure)",
-                unit: " гПа",
+                unit: L10n.string("note_detail.metric.pressure.unit"),
                 systemImage: "gauge.with.dots.needle.67percent",
                 iconTint: Tok.pressureTint,
                 iconColor: Color(red: 234 / 255, green: 88 / 255, blue: 12 / 255)
             )
             metricTile(
-                title: "Хмарність",
+                title: L10n.string("note_detail.metric.clouds"),
                 mainValue: "\(note.clouds)",
                 unit: "%",
                 systemImage: "cloud.fill",
@@ -180,10 +183,10 @@ struct NoteDetailView: View {
                         .foregroundStyle(Color(red: 13 / 255, green: 148 / 255, blue: 136 / 255))
                 }
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Вітер")
+                    Text(L10n.string("note_detail.wind.title"))
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundStyle(Tok.primaryText)
-                    Text("Швидкість і напрямок")
+                    Text(L10n.string("note_detail.wind.subtitle"))
                         .font(.system(size: 14, weight: .regular))
                         .foregroundStyle(Tok.meta)
                 }
@@ -191,16 +194,16 @@ struct NoteDetailView: View {
 
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Швидкість")
+                    Text(L10n.string("note_detail.wind.speed_label"))
                         .font(.system(size: 14, weight: .regular))
                         .foregroundStyle(Tok.meta)
-                    windValueLine(main: String(format: "%.1f", speed), unit: "м/с")
+                    windValueLine(main: String(format: "%.1f", speed), unit: L10n.string("note_detail.wind.speed.unit"))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 HStack(alignment: .center, spacing: 12) {
                     VStack(alignment: .trailing, spacing: 4) {
-                        Text("Напрямок")
+                        Text(L10n.string("note_detail.wind.direction_label"))
                             .font(.system(size: 14, weight: .regular))
                             .foregroundStyle(Tok.meta)
                         windDirectionValue(degrees: deg, cardinal: cardinal)
@@ -217,13 +220,13 @@ struct NoteDetailView: View {
 
     private var coordinatesStrip: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Координати локації")
+            Text(L10n.string("note_detail.coordinates.title"))
                 .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(Tok.meta)
             HStack {
-                coordinateInline(label: "Широта", value: formatCoordDegrees(note.latitude))
+                coordinateInline(label: L10n.string("note_detail.coordinates.latitude"), value: formatCoordDegrees(note.latitude))
                 Spacer(minLength: 16)
-                coordinateInline(label: "Довгота", value: formatCoordDegrees(note.longitude))
+                coordinateInline(label: L10n.string("note_detail.coordinates.longitude"), value: formatCoordDegrees(note.longitude))
             }
         }
         .padding(20)
@@ -359,7 +362,7 @@ struct NoteDetailView: View {
                 .font(.system(size: 22, weight: .medium))
                 .foregroundStyle(Color(red: 13 / 255, green: 148 / 255, blue: 136 / 255))
                 .rotationEffect(.degrees(degrees.isFinite ? degrees : 0))
-                .accessibilityLabel("Напрямок вітру")
+                .accessibilityLabel(L10n.string("note_detail.wind_compass.accessibility"))
         }
     }
 
@@ -456,7 +459,7 @@ struct NoteDetailView: View {
     private func visibilityUnitText(_ km: Double) -> String {
         let v = km.finiteOrZero
         if v <= 0 { return "" }
-        return " км"
+        return L10n.string("note_detail.metric.visibility.unit")
     }
 
     private func formatCoordDegrees(_ value: Double) -> String {
@@ -471,8 +474,8 @@ struct NoteDetailView: View {
 
     private func noteMetaLeading(date: Date) -> String {
         let cal = Calendar.current
-        if cal.isDateInToday(date) { return "Сьогодні" }
-        if cal.isDateInYesterday(date) { return "Вчора" }
+        if cal.isDateInToday(date) { return L10n.string("common.relative.today") }
+        if cal.isDateInYesterday(date) { return L10n.string("common.relative.yesterday") }
         return date.formatted(.dateTime.day().month(.wide))
     }
 

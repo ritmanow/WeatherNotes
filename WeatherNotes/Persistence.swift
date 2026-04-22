@@ -65,11 +65,11 @@ struct PersistenceController {
         let sample = WeatherNote(context: context)
         sample.id = UUID()
         sample.createdAt = Date()
-        sample.text = "Preview sample — sunny walk"
+        sample.text = L10n.string("preview.seed.note_text")
         sample.temperature = 21
         sample.feelsLike = 20
-        sample.weatherDescription = "clear sky"
-        sample.weatherMain = "Clear"
+        sample.weatherDescription = L10n.string("preview.seed.weather_description")
+        sample.weatherMain = "clear"
         sample.owmIconId = "01d"
         sample.humidity = 55
         sample.pressure = 1012
@@ -77,7 +77,7 @@ struct PersistenceController {
         sample.clouds = 0
         sample.windSpeed = 3.2
         sample.windDirection = 180
-        sample.locationDisplay = "Preview City"
+        sample.locationDisplay = L10n.string("preview.seed.location_display")
         sample.latitude = 50.45
         sample.longitude = 30.52
     }

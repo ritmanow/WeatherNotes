@@ -82,7 +82,7 @@ struct NotesListView: View {
     private var listHeader: some View {
         HStack(alignment: .center, spacing: 12) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Погодні нотатки")
+                Text(L10n.string("notes_list.title"))
                     .font(.system(size: 24, weight: .semibold, design: .default))
                     .foregroundStyle(ListPalette.textPrimary)
                     .tracking(0.07)
@@ -136,7 +136,7 @@ struct NotesListView: View {
                 .background(Circle().fill(ListPalette.addButton))
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("Додати нотатку")
+        .accessibilityLabel(L10n.string("notes_list.action.add.accessibility"))
         .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 4)
         .shadow(color: .black.opacity(0.1), radius: 15, x: 0, y: 10)
     }
@@ -153,11 +153,11 @@ struct NotesListView: View {
                         .font(.system(size: 48, weight: .regular))
                         .symbolRenderingMode(.hierarchical)
                         .foregroundStyle(ListPalette.textSecondary)
-                    Text("Ще немає нотаток")
+                    Text(L10n.string("notes_list.empty.title"))
                         .font(.system(size: 18, weight: .semibold, design: .default))
                         .foregroundStyle(ListPalette.textPrimary)
                         .multilineTextAlignment(.center)
-                    Text("Натисніть кнопку з «+» у правому верхньому куті, щоб створити нотатку з погодою.")
+                    Text(L10n.string("notes_list.empty.body"))
                         .font(.system(size: 14, weight: .regular, design: .default))
                         .foregroundStyle(ListPalette.textSecondary)
                         .multilineTextAlignment(.center)
@@ -174,17 +174,24 @@ struct NotesListView: View {
     }
 
     private func noteCountSubtitle(_ count: Int) -> String {
+        let lang = Locale.current.language.languageCode?.identifier ?? "uk"
         let word: String
-        let n10 = count % 10
-        let n100 = count % 100
-        if (11...14).contains(n100) {
-            word = "нотаток"
-        } else if n10 == 1 {
-            word = "нотатка"
-        } else if (2...4).contains(n10) {
-            word = "нотатки"
+        if lang == "en" {
+            word = (count == 1)
+                ? L10n.string("notes_list.count.note.one")
+                : L10n.string("notes_list.count.note.many")
         } else {
-            word = "нотаток"
+            let n10 = count % 10
+            let n100 = count % 100
+            if (11...14).contains(n100) {
+                word = L10n.string("notes_list.count.note.many")
+            } else if n10 == 1 {
+                word = L10n.string("notes_list.count.note.one")
+            } else if (2...4).contains(n10) {
+                word = L10n.string("notes_list.count.note.few")
+            } else {
+                word = L10n.string("notes_list.count.note.many")
+            }
         }
         return "\(count) \(word)"
     }
@@ -231,7 +238,7 @@ private struct NoteRowView: View {
                     dateMetaRow(createdAt)
                 }
                 if !conditionString(for: note).isEmpty {
-                    Text(conditionString(for: note).localizedCapitalized)
+                    Text(conditionString(for: note))
                         .font(.system(size: 14, weight: .regular, design: .default))
                         .foregroundStyle(ListPalette.textCondition)
                 }
@@ -268,26 +275,26 @@ private struct NoteRowView: View {
 
     private func relativeDayLabel(for date: Date) -> String {
         let cal = Calendar.current
-        if cal.isDateInToday(date) { return "Сьогодні" }
-        if cal.isDateInYesterday(date) { return "Вчора" }
+        if cal.isDateInToday(date) { return L10n.string("common.relative.today") }
+        if cal.isDateInYesterday(date) { return L10n.string("common.relative.yesterday") }
         return date.formatted(
             .dateTime.day().month(.abbreviated)
-                .locale(Locale(identifier: "uk_UA"))
+                .locale(.autoupdatingCurrent)
         )
     }
 
     private func timePortion(_ date: Date) -> String {
         date.formatted(
             .dateTime.hour().minute()
-                .locale(Locale(identifier: "uk_UA"))
+                .locale(.autoupdatingCurrent)
         )
     }
 
     private func conditionString(for note: WeatherNote) -> String {
-        let desc = (note.weatherDescription ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        if !desc.isEmpty { return desc.localizedLowercase }
-        let main = (note.weatherMain ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        return main.localizedLowercase
+        WeatherConditionDisplay.phrase(
+            apiDescription: note.weatherDescription ?? "",
+            weatherMain: note.weatherMain ?? ""
+        )
     }
 
     private func listTemperature(_ note: WeatherNote) -> Int {

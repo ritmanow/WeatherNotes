@@ -26,9 +26,9 @@ enum ThemePreference: String, CaseIterable {
 
     var accessibilityLabel: String {
         switch self {
-        case .system: "Тема: системна"
-        case .light: "Тема: світла"
-        case .dark: "Тема: темна"
+        case .system: L10n.string("theme.accessibility.system")
+        case .light: L10n.string("theme.accessibility.light")
+        case .dark: L10n.string("theme.accessibility.dark")
         }
     }
 
