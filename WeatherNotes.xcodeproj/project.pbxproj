@@ -86,10 +86,11 @@
 				};
 			};
 			buildConfigurationList = 73AE510B2F981BE9001DEA54 /* Build configuration list for PBXProject "WeatherNotes" */;
-			developmentRegion = en;
+			developmentRegion = uk;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				uk,
 				Base,
 			);
 			mainGroup = 73AE51072F981BE9001DEA54;
