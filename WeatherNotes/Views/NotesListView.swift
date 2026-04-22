@@ -1,23 +1,98 @@
 import CoreData
 import SwiftUI
 
-// MARK: - Figma ListScreen (node 1:5) palette
+// MARK: - ListScreen colors (Figma light ~22:3, dark ~22:31; adaptive for all iPhone sizes)
 
-private enum ListPalette {
-    static let screenBackground = Color(uiColor: .systemGroupedBackground)
-    static let textPrimary = Color.primary
-    static let textSecondary = Color.secondary
-    static let textCondition = Color(uiColor: .secondaryLabel)
-    static let borderHeader = Color(uiColor: .separator)
-    static let borderCard = Color(uiColor: .separator).opacity(0.35)
-    static let bullet = Color(uiColor: .tertiaryLabel)
-    static let themeButtonFill = Color(uiColor: .tertiarySystemFill)
-    static let addButton = Color(red: 43 / 255, green: 127 / 255, blue: 1) // #2b7fff
-    static let white = Color(uiColor: .systemBackground)
+private enum ListColors {
+    /// Main canvas behind header + content (#f9fafb light / #101828 dark).
+    static func screen(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 16 / 255, green: 24 / 255, blue: 40 / 255)
+            : Color(red: 249 / 255, green: 250 / 255, blue: 251 / 255)
+    }
+
+    /// Header bar surface (white / #1e2939).
+    static func headerBar(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 30 / 255, green: 41 / 255, blue: 57 / 255)
+            : Color(red: 1, green: 1, blue: 1)
+    }
+
+    /// Note cards & empty-state icon disc (lifted from canvas in dark).
+    static func card(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 30 / 255, green: 41 / 255, blue: 57 / 255)
+            : Color(red: 1, green: 1, blue: 1)
+    }
+
+    /// Figma light: #f3f4f6 — dark: #364153.
+    static func cardBorder(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 54 / 255, green: 65 / 255, blue: 83 / 255)
+            : Color(red: 243 / 255, green: 244 / 255, blue: 246 / 255)
+    }
+
+    /// Figma light: #e5e7eb — dark: #364153.
+    static func headerDivider(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 54 / 255, green: 65 / 255, blue: 83 / 255)
+            : Color(red: 229 / 255, green: 231 / 255, blue: 235 / 255)
+    }
+
+    static func primaryText(_ scheme: ColorScheme) -> Color {
+        scheme == .dark ? Color.white : Color.primary
+    }
+
+    static func secondaryText(_ scheme: ColorScheme) -> Color {
+        scheme == .dark ? Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255) : Color.secondary
+    }
+
+    static func emptyTitle(_ scheme: ColorScheme) -> Color {
+        scheme == .dark ? Color(red: 209 / 255, green: 213 / 255, blue: 220 / 255) : Color.primary
+    }
+
+    static func emptyHint(_ scheme: ColorScheme) -> Color {
+        scheme == .dark ? Color(red: 106 / 255, green: 114 / 255, blue: 130 / 255) : Color.secondary
+    }
+
+    static func textCondition(_ scheme: ColorScheme) -> Color {
+        scheme == .dark ? Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255) : Color(uiColor: .secondaryLabel)
+    }
+
+    /// Weather phrase on list card (Figma light #4a5565).
+    static func listCardCondition(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255)
+            : Color(red: 74 / 255, green: 85 / 255, blue: 101 / 255)
+    }
+
+    static func bullet(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 74 / 255, green: 85 / 255, blue: 101 / 255)
+            : Color(red: 209 / 255, green: 213 / 255, blue: 220 / 255)
+    }
+
+    static func themeButtonFill(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 54 / 255, green: 65 / 255, blue: 83 / 255)
+            : Color(uiColor: .tertiarySystemFill)
+    }
+
+    /// Light: #2b7fff — Dark: #155dfc (Figma).
+    static func addButton(_ scheme: ColorScheme) -> Color {
+        scheme == .dark
+            ? Color(red: 21 / 255, green: 93 / 255, blue: 252 / 255)
+            : Color(red: 43 / 255, green: 127 / 255, blue: 1)
+    }
+
+    static func cardShadow(_ scheme: ColorScheme) -> Color {
+        scheme == .dark ? Color.white.opacity(0.08) : Color.black.opacity(0.1)
+    }
 }
 
 struct NotesListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.colorScheme) private var colorScheme
 
     @AppStorage(ThemePreference.storageKey) private var themeRaw = ThemePreference.system.rawValue
 
@@ -36,7 +111,7 @@ struct NotesListView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                ListPalette.screenBackground
+                ListColors.screen(colorScheme)
                     .ignoresSafeArea()
                 VStack(spacing: 0) {
                     listHeader
@@ -48,33 +123,41 @@ struct NotesListView: View {
                 }
             }
             .toolbarBackground(.hidden, for: .navigationBar)
-            .sheet(isPresented: $isPresentingAdd) {
+            /// `sheet` leaves a system white strip above the card on some sizes (e.g. SE) in dark mode; full-screen avoids that chrome.
+            .fullScreenCover(isPresented: $isPresentingAdd) {
                 AddNoteView(context: viewContext) {
                     isPresentingAdd = false
                 }
             }
         }
+        .background(ListColors.screen(colorScheme).ignoresSafeArea(edges: .all))
         .preferredColorScheme(themePreference.colorScheme)
     }
 
     private var listContent: some View {
-        List {
-            ForEach(notes) { note in
-                NavigationLink {
-                    NoteDetailView(note: note)
-                } label: {
-                    NoteRowView(note: note)
-                }
+            List {
+                ForEach(notes) { note in
+                    NavigationLink {
+                        NoteDetailView(note: note)
+                    } label: {
+                        NoteRowView(note: note)
+                    }
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                 .listRowSeparator(.hidden)
                 .listRowBackground(NoteCardChrome())
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button(role: .destructive) {
+                        deleteNote(note)
+                    } label: {
+                        Label(L10n.string("notes_list.action.delete"), systemImage: "trash")
+                    }
+                }
             }
-            .onDelete(perform: deleteNotes)
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .listRowSpacing(16)
-        .padding(.top, 12)
+        .padding(.top, 16)
     }
 
     // MARK: Header (Figma: white bar, 1px border #e5e7eb, soft shadow)
@@ -84,11 +167,11 @@ struct NotesListView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(L10n.string("notes_list.title"))
                     .font(.system(size: 24, weight: .semibold, design: .default))
-                    .foregroundStyle(ListPalette.textPrimary)
+                    .foregroundStyle(ListColors.primaryText(colorScheme))
                     .tracking(0.07)
                 Text(noteCountSubtitle(notes.count))
                     .font(.system(size: 14, weight: .regular, design: .default))
-                    .foregroundStyle(ListPalette.textSecondary)
+                    .foregroundStyle(ListColors.secondaryText(colorScheme))
                     .tracking(-0.15)
             }
             Spacer(minLength: 8)
@@ -99,10 +182,10 @@ struct NotesListView: View {
         .padding(.top, 8)
         .padding(.bottom, 20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(ListPalette.white)
+        .background(ListColors.headerBar(colorScheme))
         .overlay(alignment: .bottom) {
             Rectangle()
-                .fill(ListPalette.borderHeader)
+                .fill(ListColors.headerDivider(colorScheme))
                 .frame(maxWidth: .infinity, maxHeight: 0.5)
         }
         .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
@@ -115,9 +198,9 @@ struct NotesListView: View {
         } label: {
             Image(systemName: themePreference.toolbarIconName)
                 .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(ListPalette.textPrimary)
+                .foregroundStyle(ListColors.primaryText(colorScheme))
                 .frame(width: 44, height: 44)
-                .background(Circle().fill(ListPalette.themeButtonFill))
+                .background(Circle().fill(ListColors.themeButtonFill(colorScheme)))
         }
         .buttonStyle(.plain)
         .accessibilityLabel(themePreference.accessibilityLabel)
@@ -133,7 +216,7 @@ struct NotesListView: View {
                 .font(.system(size: 24, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(width: 48, height: 48)
-                .background(Circle().fill(ListPalette.addButton))
+                .background(Circle().fill(ListColors.addButton(colorScheme)))
         }
         .buttonStyle(.plain)
         .accessibilityLabel(L10n.string("notes_list.action.add.accessibility"))
@@ -141,36 +224,38 @@ struct NotesListView: View {
         .shadow(color: .black.opacity(0.1), radius: 15, x: 0, y: 10)
     }
 
-    // MARK: Empty state (Ukrainian)
+    // MARK: Empty state (Figma: cloud in ~112pt disc @ ~50% opacity, title 20 medium, hint 14; no card chrome)
 
     private var emptyStateView: some View {
-        VStack {
-            Spacer(minLength: 32)
-            ZStack {
-                NoteCardChrome()
-                VStack(spacing: 16) {
-                    Image(systemName: "note.text.badge.plus")
-                        .font(.system(size: 48, weight: .regular))
-                        .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(ListPalette.textSecondary)
+        GeometryReader { proxy in
+            let maxContent = min(proxy.size.width - 32, 400)
+            VStack(spacing: 0) {
+                Spacer(minLength: 24)
+                VStack(spacing: 20) {
+                    Image("EmptyStateCloud")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 112, height: 112)
+                        .accessibilityHidden(true)
+
                     Text(L10n.string("notes_list.empty.title"))
-                        .font(.system(size: 18, weight: .semibold, design: .default))
-                        .foregroundStyle(ListPalette.textPrimary)
+                        .font(.system(size: 20, weight: .medium, design: .default))
+                        .foregroundStyle(ListColors.emptyTitle(colorScheme))
                         .multilineTextAlignment(.center)
+                        .frame(maxWidth: maxContent)
+
                     Text(L10n.string("notes_list.empty.body"))
                         .font(.system(size: 14, weight: .regular, design: .default))
-                        .foregroundStyle(ListPalette.textSecondary)
+                        .foregroundStyle(ListColors.emptyHint(colorScheme))
                         .multilineTextAlignment(.center)
-                        .lineSpacing(2)
+                        .lineSpacing(4)
+                        .frame(maxWidth: maxContent)
                 }
-                .padding(.horizontal, 24)
-                .padding(.vertical, 32)
+                .frame(maxWidth: .infinity)
+                Spacer(minLength: 24)
             }
-            .frame(minHeight: 220)
-            .padding(.horizontal, 16)
-            Spacer()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func noteCountSubtitle(_ count: Int) -> String {
@@ -196,9 +281,9 @@ struct NotesListView: View {
         return "\(count) \(word)"
     }
 
-    private func deleteNotes(at offsets: IndexSet) {
+    private func deleteNote(_ note: WeatherNote) {
         withAnimation {
-            offsets.map { notes[$0] }.forEach(viewContext.delete)
+            viewContext.delete(note)
             do {
                 try viewContext.save()
             } catch {
@@ -211,19 +296,24 @@ struct NotesListView: View {
 // MARK: - Note card chrome (Figma: 16pt radius, border #f3f4f6, soft elevation)
 
 private struct NoteCardChrome: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     var body: some View {
+        let shadow = ListColors.cardShadow(colorScheme)
         ZStack {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(ListPalette.white)
+                .fill(ListColors.card(colorScheme))
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(ListPalette.borderCard, lineWidth: 0.5)
+                .strokeBorder(ListColors.cardBorder(colorScheme), lineWidth: 0.5)
         }
-        .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
-        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+        .shadow(color: shadow, radius: 1, x: 0, y: 1)
+        .shadow(color: shadow, radius: 2, x: 0, y: 1)
     }
 }
 
 private struct NoteRowView: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let note: WeatherNote
 
     var body: some View {
@@ -231,7 +321,7 @@ private struct NoteRowView: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text(note.text ?? "")
                     .font(.system(size: 18, weight: .medium, design: .default))
-                    .foregroundStyle(ListPalette.textPrimary)
+                    .foregroundStyle(ListColors.primaryText(colorScheme))
                     .lineLimit(2)
                     .tracking(-0.44)
                 if let createdAt = note.createdAt {
@@ -240,18 +330,18 @@ private struct NoteRowView: View {
                 if !conditionString(for: note).isEmpty {
                     Text(conditionString(for: note))
                         .font(.system(size: 14, weight: .regular, design: .default))
-                        .foregroundStyle(ListPalette.textCondition)
+                        .foregroundStyle(ListColors.listCardCondition(colorScheme))
                 }
             }
             Spacer(minLength: 8)
             VStack(alignment: .trailing, spacing: 8) {
                 Image(systemName: symbolName(for: note.weatherMain ?? ""))
-                    .font(.system(size: 32, weight: .regular))
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(ListPalette.addButton)
+                    .font(.system(size: 40, weight: .regular))
+                    .symbolRenderingMode(.monochrome)
+                    .foregroundStyle(ListColors.addButton(colorScheme))
                 Text("\(listTemperature(note))°")
                     .font(.system(size: 24, weight: .semibold, design: .default))
-                    .foregroundStyle(ListPalette.textPrimary)
+                    .foregroundStyle(ListColors.primaryText(colorScheme))
                     .monospacedDigit()
                     .tracking(0.07)
             }
@@ -265,11 +355,11 @@ private struct NoteRowView: View {
         HStack(spacing: 8) {
             Text(relativeDayLabel(for: date))
             Text("•")
-                .foregroundStyle(ListPalette.bullet)
+                .foregroundStyle(ListColors.bullet(colorScheme))
             Text(timePortion(date))
         }
         .font(.system(size: 14, weight: .regular, design: .default))
-        .foregroundStyle(ListPalette.textSecondary)
+        .foregroundStyle(ListColors.secondaryText(colorScheme))
         .tracking(-0.15)
     }
 
@@ -305,15 +395,15 @@ private struct NoteRowView: View {
 
     private func symbolName(for weatherMain: String) -> String {
         switch weatherMain.lowercased() {
-        case "clear": return "sun.max.fill"
-        case "clouds": return "cloud.fill"
-        case "rain": return "cloud.rain.fill"
-        case "drizzle": return "cloud.drizzle.fill"
-        case "thunderstorm": return "cloud.bolt.rain.fill"
-        case "snow": return "cloud.snow.fill"
-        case "mist", "fog", "haze": return "cloud.fog.fill"
+        case "clear": return "sun.max"
+        case "clouds": return "cloud"
+        case "rain": return "cloud.rain"
+        case "drizzle": return "cloud.drizzle"
+        case "thunderstorm": return "cloud.bolt.rain"
+        case "snow": return "cloud.snow"
+        case "mist", "fog", "haze": return "cloud.fog"
         case "smoke", "dust", "sand", "ash", "squall", "tornado": return "wind"
-        default: return "cloud.sun.fill"
+        default: return "cloud.sun"
         }
     }
 }
