@@ -1,3 +1,4 @@
+import CoreData
 import SwiftUI
 
 // MARK: - DetailScreen palette (Figma light 1:378 / 1:496, dark 1:616 / 1:734)
@@ -65,7 +66,6 @@ private enum DetailColors {
             : Color(red: 229 / 255, green: 231 / 255, blue: 235 / 255)
     }
 
-    // Icon wells (Figma dark uses translucent tints)
     static func humidityWell(_ scheme: ColorScheme) -> Color {
         scheme == .dark
             ? Color(red: 28 / 255, green: 57 / 255, blue: 142 / 255).opacity(0.3)
@@ -96,7 +96,6 @@ private enum DetailColors {
             : Color(red: 240 / 255, green: 253 / 255, blue: 250 / 255)
     }
 
-    /// SF Symbol on metric / wind wells: colored in light, white in dark (Figma).
     static func metricIconForeground(
         _ scheme: ColorScheme,
         lightAccent: Color
@@ -113,13 +112,16 @@ private enum DetailColors {
 
 struct NoteDetailView: View {
     @Environment(\.colorScheme) private var colorScheme
-
-    let note: WeatherNote
+    @StateObject private var viewModel: NoteDetailViewModel
 
     private let metricColumns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12),
     ]
+
+    init(note: WeatherNote) {
+        _viewModel = StateObject(wrappedValue: NoteDetailViewModel(note: note))
+    }
 
     var body: some View {
         ScrollView {
@@ -141,16 +143,14 @@ struct NoteDetailView: View {
         .tint(DetailColors.accentBlue(colorScheme))
     }
 
-    // MARK: - Cards
-
     private var noteCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(note.text ?? "")
+            Text(viewModel.noteText)
                 .font(.system(size: 24, weight: .semibold))
                 .foregroundStyle(DetailColors.primaryText(colorScheme))
                 .tracking(0.07)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            if let createdAt = note.createdAt {
+            if let createdAt = viewModel.note.createdAt {
                 noteMetaRow(date: createdAt)
             }
         }
@@ -161,7 +161,7 @@ struct NoteDetailView: View {
 
     private func noteMetaRow(date: Date) -> some View {
         HStack(spacing: 8) {
-            Text(noteMetaLeading(date: date))
+            Text(viewModel.noteMetaLeading(for: date))
                 .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(DetailColors.secondaryText(colorScheme))
                 .tracking(-0.15)
@@ -169,7 +169,7 @@ struct NoteDetailView: View {
                 .font(.system(size: 14, weight: .regular))
                 .foregroundStyle(DetailColors.metaBullet(colorScheme))
                 .tracking(-0.15)
-            Text(noteMetaTime(date: date))
+            Text(viewModel.noteMetaTime(for: date))
                 .font(.system(size: 14, weight: .regular))
                 .foregroundStyle(DetailColors.secondaryText(colorScheme))
                 .tracking(-0.15)
@@ -177,13 +177,11 @@ struct NoteDetailView: View {
     }
 
     private var weatherHeroCard: some View {
-        let style = heroStyle(for: note.weatherMain ?? "")
-        let loc = LocationDisplayFormatting.displayString(note.locationDisplay ?? "—")
-        let condition = WeatherConditionDisplay.phrase(
-            apiDescription: note.weatherDescription ?? "",
-            weatherMain: note.weatherMain ?? ""
-        )
-        let feels = safeIntDegrees(note.feelsLike)
+        let style = viewModel.heroStyle(for: viewModel.note.weatherMain ?? "")
+        let loc = viewModel.locationDisplayFormatted
+        let apiDescription = viewModel.heroWeatherDescription
+        let conditionDisplay = apiDescription.isEmpty ? "—" : apiDescription
+        let feels = viewModel.feelsLike
 
         return ZStack(alignment: .topTrailing) {
             VStack(alignment: .leading, spacing: 0) {
@@ -200,14 +198,14 @@ struct NoteDetailView: View {
                 }
                 .padding(.bottom, 16)
 
-                Text("\(safeIntDegrees(note.temperature))°")
+                Text("\(viewModel.heroTemperature)°")
                     .font(.system(size: 72, weight: .light))
                     .tracking(0.12)
                     .foregroundStyle(.white)
                     .minimumScaleFactor(0.55)
                     .lineLimit(1)
 
-                Text(condition)
+                Text(conditionDisplay)
                     .font(.system(size: 20, weight: .regular))
                     .foregroundStyle(.white.opacity(0.95))
                     .tracking(-0.45)
@@ -242,7 +240,7 @@ struct NoteDetailView: View {
         LazyVGrid(columns: metricColumns, spacing: 12) {
             metricTile(
                 title: L10n.string("note_detail.metric.humidity"),
-                mainValue: "\(note.humidity)",
+                mainValue: "\(viewModel.note.humidity)",
                 unit: "%",
                 systemImage: "humidity",
                 iconWell: DetailColors.humidityWell(colorScheme),
@@ -250,15 +248,15 @@ struct NoteDetailView: View {
             )
             metricTile(
                 title: L10n.string("note_detail.metric.visibility"),
-                mainValue: visibilityMainText(note.visibilityKm),
-                unit: visibilityUnitText(note.visibilityKm),
+                mainValue: viewModel.visibilityMainText(),
+                unit: viewModel.visibilityUnitText(),
                 systemImage: "eye",
                 iconWell: DetailColors.visibilityWell(colorScheme),
                 iconAccent: DetailColors.visibilityAccent
             )
             metricTile(
                 title: L10n.string("note_detail.metric.pressure"),
-                mainValue: "\(note.pressure)",
+                mainValue: "\(viewModel.note.pressure)",
                 unit: L10n.string("note_detail.metric.pressure.unit"),
                 systemImage: "gauge.with.dots.needle.67percent",
                 iconWell: DetailColors.pressureWell(colorScheme),
@@ -266,7 +264,7 @@ struct NoteDetailView: View {
             )
             metricTile(
                 title: L10n.string("note_detail.metric.clouds"),
-                mainValue: "\(note.clouds)",
+                mainValue: "\(viewModel.note.clouds)",
                 unit: "%",
                 systemImage: "cloud",
                 iconWell: DetailColors.cloudsWell(colorScheme),
@@ -276,9 +274,9 @@ struct NoteDetailView: View {
     }
 
     private var windCard: some View {
-        let deg = note.windDirection
-        let cardinal = WindDirection.cardinalSymbol(degrees: deg)
-        let speed = note.windSpeed.finiteOrZero
+        let deg = viewModel.note.windDirection
+        let cardinal = viewModel.windCardinalSymbol()
+        let degreeLabel = viewModel.windDirectionDegreesText()
 
         return VStack(alignment: .leading, spacing: 20) {
             HStack(alignment: .center, spacing: 12) {
@@ -309,7 +307,7 @@ struct NoteDetailView: View {
                         .font(.system(size: 14, weight: .regular))
                         .foregroundStyle(DetailColors.secondaryText(colorScheme))
                         .tracking(-0.15)
-                    windValueLine(main: String(format: "%.1f", speed), unit: L10n.string("note_detail.wind.speed.unit"))
+                    windValueLine(main: viewModel.windSpeedFormatted(), unit: L10n.string("note_detail.wind.speed.unit"))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -319,7 +317,7 @@ struct NoteDetailView: View {
                             .font(.system(size: 14, weight: .regular))
                             .foregroundStyle(DetailColors.secondaryText(colorScheme))
                             .tracking(-0.15)
-                        windDirectionValue(degrees: deg, cardinal: cardinal)
+                        windDirectionColumn(degrees: deg, degreeLabel: degreeLabel, cardinal: cardinal)
                     }
                     windCompass(degrees: deg)
                 }
@@ -337,9 +335,15 @@ struct NoteDetailView: View {
                 .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(DetailColors.secondaryText(colorScheme))
             HStack {
-                coordinateInline(label: L10n.string("note_detail.coordinates.latitude"), value: formatCoordDegrees(note.latitude))
+                coordinateInline(
+                    label: L10n.string("note_detail.coordinates.latitude"),
+                    value: viewModel.formatCoordDegrees(viewModel.note.latitude)
+                )
                 Spacer(minLength: 16)
-                coordinateInline(label: L10n.string("note_detail.coordinates.longitude"), value: formatCoordDegrees(note.longitude))
+                coordinateInline(
+                    label: L10n.string("note_detail.coordinates.longitude"),
+                    value: viewModel.formatCoordDegrees(viewModel.note.longitude)
+                )
             }
         }
         .padding(20)
@@ -372,8 +376,6 @@ struct NoteDetailView: View {
             Color(red: 243 / 255, green: 244 / 255, blue: 246 / 255),
         ]
     }
-
-    // MARK: - Subviews / chrome
 
     private func detailCardChrome(cornerRadius: CGFloat) -> some View {
         let shadow = DetailColors.cardShadow(colorScheme)
@@ -466,14 +468,19 @@ struct NoteDetailView: View {
             .minimumScaleFactor(0.7)
     }
 
-    /// Figma: direction column shows cardinal (e.g. ENE) prominently.
-    private func windDirectionValue(degrees: Double, cardinal: String) -> some View {
+    private func windDirectionColumn(degrees: Double, degreeLabel: String, cardinal: String) -> some View {
         Group {
             if degrees.isFinite {
-                Text(cardinal)
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundStyle(DetailColors.primaryText(colorScheme))
-                    .tracking(0.07)
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(degreeLabel)
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(DetailColors.secondaryText(colorScheme))
+                        .tracking(-0.15)
+                    Text(cardinal)
+                        .font(.system(size: 24, weight: .semibold))
+                        .foregroundStyle(DetailColors.primaryText(colorScheme))
+                        .tracking(0.07)
+                }
             } else {
                 Text("—")
                     .font(.system(size: 24, weight: .semibold))
@@ -507,111 +514,5 @@ struct NoteDetailView: View {
             .foregroundStyle(DetailColors.primaryText(colorScheme)))
             .lineLimit(1)
             .minimumScaleFactor(0.75)
-    }
-
-    private func heroStyle(for weatherMain: String) -> (gradient: LinearGradient, symbolName: String) {
-        switch weatherMain.lowercased() {
-        case "clear":
-            return (
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.25, green: 0.55, blue: 0.95),
-                        Color(red: 0.98, green: 0.75, blue: 0.35),
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                "sun.max"
-            )
-        case "clouds":
-            return (grayMistHeroGradient, "cloud")
-        case "rain", "drizzle":
-            return (
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.22, green: 0.35, blue: 0.52),
-                        Color(red: 0.38, green: 0.42, blue: 0.48),
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                "cloud.rain"
-            )
-        case "thunderstorm":
-            return (
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.25, green: 0.22, blue: 0.45),
-                        Color(red: 0.45, green: 0.35, blue: 0.55),
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                "cloud.bolt.rain"
-            )
-        case "snow":
-            return (
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.55, green: 0.72, blue: 0.88),
-                        Color(red: 0.88, green: 0.92, blue: 0.96),
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                "cloud.snow"
-            )
-        case "mist", "fog", "haze":
-            return (grayMistHeroGradient, "cloud.fog")
-        default:
-            return (grayMistHeroGradient, "cloud.sun")
-        }
-    }
-
-    private var grayMistHeroGradient: LinearGradient {
-        LinearGradient(
-            stops: [
-                .init(color: Color(red: 209 / 255, green: 213 / 255, blue: 220 / 255), location: 0),
-                .init(color: Color(red: 153 / 255, green: 161 / 255, blue: 175 / 255), location: 0.5),
-                .init(color: Color(red: 106 / 255, green: 114 / 255, blue: 130 / 255), location: 1),
-            ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-    }
-
-    // MARK: - Formatting (existing guards)
-
-    private func visibilityMainText(_ km: Double) -> String {
-        let v = km.finiteOrZero
-        if v <= 0 { return "—" }
-        return String(format: "%.0f", v)
-    }
-
-    private func visibilityUnitText(_ km: Double) -> String {
-        let v = km.finiteOrZero
-        if v <= 0 { return "" }
-        return L10n.string("note_detail.metric.visibility.unit")
-    }
-
-    private func formatCoordDegrees(_ value: Double) -> String {
-        guard value.isFinite else { return "—" }
-        return String(format: "%.4f°", value)
-    }
-
-    private func safeIntDegrees(_ value: Double) -> Int {
-        guard value.isFinite else { return 0 }
-        return Int(value.rounded())
-    }
-
-    private func noteMetaLeading(date: Date) -> String {
-        let cal = Calendar.current
-        if cal.isDateInToday(date) { return L10n.string("common.relative.today") }
-        if cal.isDateInYesterday(date) { return L10n.string("common.relative.yesterday") }
-        return date.formatted(.dateTime.day().month(.wide))
-    }
-
-    private func noteMetaTime(date: Date) -> String {
-        date.formatted(Date.FormatStyle(date: .omitted, time: .shortened))
     }
 }
