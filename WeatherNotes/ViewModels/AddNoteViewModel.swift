@@ -11,7 +11,7 @@ final class AddNoteViewModel: ObservableObject {
         var errorDescription: String? {
             switch self {
             case .weatherTimeout:
-                return "Сервіс погоди не відповідає. Спробуйте ще раз."
+                return L10n.string("add_note.save_flow.weather_timeout")
             }
         }
     }
@@ -38,14 +38,14 @@ final class AddNoteViewModel: ObservableObject {
     /// Bold location segment in the info card; follows `weatherSourceHint` during save, else defaults to Kyiv.
     var infoCardLocationHighlight: String {
         if !weatherSourceHint.isEmpty {
-            if weatherSourceHint.contains("Київ") {
-                return "Київ, Україна"
+            if weatherSourceHint.contains(L10n.string("add_note.weather_source.substring.kyiv")) {
+                return L10n.string("add_note.location.highlight.kyiv")
             }
-            if weatherSourceHint.contains("геолокацію") {
-                return "вашого розташування"
+            if weatherSourceHint.contains(L10n.string("add_note.weather_source.substring.geolocation")) {
+                return L10n.string("add_note.location.highlight.current")
             }
         }
-        return "Київ, Україна"
+        return L10n.string("add_note.location.highlight.kyiv")
     }
 
     func save(trimmedText: String) async {
@@ -65,7 +65,7 @@ final class AddNoteViewModel: ObservableObject {
 
             let snapshot: WeatherSnapshot
             if let coord = coord, coord.latitude.isFinite, coord.longitude.isFinite {
-                weatherSourceHint = "Буде використано вашу геолокацію"
+                weatherSourceHint = L10n.string("add_note.weather_source.current_location")
                 snapshot = try await fetchWeatherWithTimeout {
                     try await self.weather.fetchCurrentWeather(
                         latitude: coord.latitude,
@@ -73,7 +73,7 @@ final class AddNoteViewModel: ObservableObject {
                     )
                 }
             } else {
-                weatherSourceHint = "Геолокація недоступна, використовуємо Київ"
+                weatherSourceHint = L10n.string("add_note.weather_source.fallback_kyiv")
                 snapshot = try await fetchWeatherWithTimeout {
                     try await self.weather.fetchCurrentWeather(cityQuery: "Kyiv,UA")
                 }
@@ -87,13 +87,13 @@ final class AddNoteViewModel: ObservableObject {
 
     private func ukrainianUserMessage(for error: Error) -> String {
         if let weather = error as? WeatherServiceError {
-            return weather.errorDescription ?? "Не вдалося отримати погоду."
+            return weather.errorDescription ?? L10n.string("add_note.error.weather_fallback")
         }
         let ns = error as NSError
         if ns.domain == NSCocoaErrorDomain {
-            return "Не вдалося зберегти нотатку. Спробуйте ще раз."
+            return L10n.string("add_note.error.save_failed")
         }
-        return "Сталася помилка. Спробуйте ще раз."
+        return L10n.string("add_note.error.generic")
     }
 
     private func fetchWeatherWithTimeout(
