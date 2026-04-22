@@ -171,6 +171,7 @@ struct AddNoteView: View {
 
     @StateObject private var viewModel: AddNoteViewModel
     @State private var text = ""
+    @State private var isErrorAlertPresented = false
     @FocusState private var isTextEditorFocused: Bool
 
     private let onSaved: () -> Void
@@ -229,13 +230,6 @@ struct AddNoteView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
                         inputCard
-                        if let message = viewModel.errorMessage, !message.isEmpty {
-                            Text(message)
-                                .font(.footnote)
-                                .foregroundStyle(.red)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.horizontal, 2)
-                        }
                         infoCard
                         tipsCard
                     }
@@ -248,6 +242,19 @@ struct AddNoteView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .preferredColorScheme(themePreference.colorScheme)
+        .onChange(of: viewModel.errorMessage) { _, newValue in
+            isErrorAlertPresented = newValue != nil && !newValue!.isEmpty
+        }
+        .alert(
+            L10n.string("add_note.error.alert_title"),
+            isPresented: $isErrorAlertPresented
+        ) {
+            Button(L10n.string("common.action.ok"), role: .cancel) {
+                viewModel.clearError()
+            }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
+        }
     }
 
     // MARK: - Header (back + title, Figma bar + divider + shadow)
