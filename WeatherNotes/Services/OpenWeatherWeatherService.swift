@@ -12,38 +12,38 @@ enum WeatherServiceError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .missingAPIKey:
-            return "Не налаштовано ключ API OpenWeather."
+            return L10n.string("weather_service.error.missing_api_key")
         case .invalidURL:
-            return "Не вдалося сформувати запит погоди."
+            return L10n.string("weather_service.error.invalid_url")
         case .network(let urlError):
             return Self.ukrainianMessage(for: urlError)
         case .invalidResponse:
-            return "Сервер повернув неочікувану відповідь."
+            return L10n.string("weather_service.error.invalid_response")
         case .httpError(let statusCode, _):
-            return "Запит погоди не вдався (HTTP \(statusCode))."
+            return L10n.format("weather_service.error.http_status_format", statusCode as CVarArg)
         case .decodingFailed:
-            return "Не вдалося прочитати відповідь про погоду."
+            return L10n.string("weather_service.error.decoding_failed")
         case .missingWeatherPayload:
-            return "У відповіді немає даних про погоду."
+            return L10n.string("weather_service.error.missing_payload")
         }
     }
 
     private static func ukrainianMessage(for urlError: URLError) -> String {
         switch urlError.code {
         case .notConnectedToInternet:
-            return "Немає підключення до Інтернету."
+            return L10n.string("weather_service.error.network.offline")
         case .timedOut:
-            return "Час очікування мережі вичерпано."
+            return L10n.string("weather_service.error.network.timeout")
         case .cannotFindHost, .dnsLookupFailed:
-            return "Не вдалося знайти сервер погоди."
+            return L10n.string("weather_service.error.network.host_not_found")
         case .networkConnectionLost, .dataNotAllowed:
-            return "З’єднання з мережею втрачено."
+            return L10n.string("weather_service.error.network.connection_lost")
         case .secureConnectionFailed:
-            return "Не вдалося встановити захищене з’єднання."
+            return L10n.string("weather_service.error.network.secure_connection_failed")
         case .cancelled:
-            return "Запит скасовано."
+            return L10n.string("weather_service.error.network.cancelled")
         default:
-            return "Помилка мережі. Перевірте підключення та спробуйте ще раз."
+            return L10n.string("weather_service.error.network.generic")
         }
     }
 
@@ -97,6 +97,7 @@ final class OpenWeatherWeatherService: WeatherServicing {
         var components = URLComponents(url: Self.baseURL, resolvingAgainstBaseURL: false)
         var items = queryItems
         items.append(URLQueryItem(name: "units", value: "metric"))
+        items.append(URLQueryItem(name: "lang", value: Self.openWeatherLanguageCode()))
         items.append(URLQueryItem(name: "appid", value: key))
         components?.queryItems = items
 
@@ -187,5 +188,10 @@ final class OpenWeatherWeatherService: WeatherServicing {
 
     private func formatCoordinate(_ value: Double) -> String {
         String(format: "%.6f", value)
+    }
+
+    /// OpenWeather `lang` parameter aligned with the user’s primary UI language (`en` vs `uk`).
+    private static func openWeatherLanguageCode() -> String {
+        Locale.current.language.languageCode?.identifier == "en" ? "en" : "uk"
     }
 }

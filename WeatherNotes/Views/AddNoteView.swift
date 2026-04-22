@@ -63,7 +63,7 @@ struct AddNoteView: View {
                     if viewModel.isSaving {
                         HStack(alignment: .center, spacing: 12) {
                             ProgressView()
-                            Text("Отримуємо погоду та зберігаємо...")
+                            Text(L10n.string("add_note.loading"))
                                 .font(.subheadline)
                                 .foregroundStyle(AddNoteStyle.textSecondary)
                         }
@@ -104,9 +104,9 @@ struct AddNoteView: View {
                 .frame(width: 40, height: 40)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Назад")
+            .accessibilityLabel(L10n.string("common.accessibility.back"))
 
-            Text("Нова нотатка")
+            Text(L10n.string("add_note.title"))
                 .font(.system(size: 20, weight: .semibold, design: .default))
                 .foregroundStyle(AddNoteStyle.textPrimary)
                 .tracking(-0.45)
@@ -130,7 +130,7 @@ struct AddNoteView: View {
 
     private var inputCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Що ви робили?")
+            Text(L10n.string("add_note.field.activity_label"))
                 .font(.system(size: 14, weight: .medium, design: .default))
                 .foregroundStyle(AddNoteStyle.textSecondary)
                 .tracking(-0.15)
@@ -143,10 +143,10 @@ struct AddNoteView: View {
                     .focused($isTextEditorFocused)
                     .scrollContentBackground(.hidden)
                     .frame(minHeight: 150)
-                    .accessibilityLabel("Нотатка")
+                    .accessibilityLabel(L10n.string("add_note.field.note.accessibility"))
                     .contentShape(Rectangle())
                 if text.isEmpty {
-                    Text("напр. пробіжка, дорога в офіс, прогулянка у парку…")
+                    Text(L10n.string("add_note.field.note.placeholder"))
                         .font(.system(size: 18, weight: .regular, design: .default))
                         .foregroundStyle(AddNoteStyle.textMuted)
                         .padding(.top, 8)
@@ -192,7 +192,7 @@ struct AddNoteView: View {
                 }
                 .frame(width: 40, height: 40)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Автоматичний знімок погоди")
+                    Text(L10n.string("add_note.info.title"))
                         .font(.system(size: 14, weight: .medium, design: .default))
                         .foregroundStyle(infoCardTextColor)
                         .tracking(-0.15)
@@ -225,13 +225,13 @@ struct AddNoteView: View {
 
     private var infoCardBodyText: Text {
         let h = viewModel.infoCardLocationHighlight
-        let body = Text("Погодні дані для ")
+        let body = Text(L10n.string("add_note.info.body.prefix"))
             .font(.system(size: 14, weight: .regular, design: .default))
             .foregroundStyle(infoCardSecondaryTextColor)
         let mid = Text(h)
             .font(.system(size: 14, weight: .semibold, design: .default))
             .foregroundStyle(infoCardTextColor)
-        let tail = Text(" будуть отримано та збережено разом з нотаткою.")
+        let tail = Text(L10n.string("add_note.info.body.suffix"))
             .font(.system(size: 14, weight: .regular, design: .default))
             .foregroundStyle(infoCardSecondaryTextColor)
         return body + mid + tail
@@ -248,10 +248,10 @@ struct AddNoteView: View {
 
     private var infoGridRows: [String] {
         [
-            "Температура та умови",
-            "Вологість і тиск",
-            "Швидкість і напрям вітру",
-            "Видимість і хмарність",
+            L10n.string("add_note.info.grid.temperature_conditions"),
+            L10n.string("add_note.info.grid.humidity_pressure"),
+            L10n.string("add_note.info.grid.wind"),
+            L10n.string("add_note.info.grid.visibility_clouds"),
         ]
     }
 
@@ -274,14 +274,14 @@ struct AddNoteView: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 4) {
                 Text("💡")
-                Text("Підказки")
+                Text(L10n.string("add_note.tips.title"))
                     .font(.system(size: 12, weight: .medium, design: .default))
                     .foregroundStyle(AddNoteStyle.labelGray)
             }
             VStack(alignment: .leading, spacing: 6) {
-                tipsLine("•", "Опишіть свою активність детальніше")
-                tipsLine("•", "Погодні дані знімаються в момент збереження")
-                tipsLine("•", "Нотатки зберігаються на вашому пристрої")
+                tipsLine("•", L10n.string("add_note.tips.activity"))
+                tipsLine("•", L10n.string("add_note.tips.capture"))
+                tipsLine("•", L10n.string("add_note.tips.storage"))
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -321,7 +321,7 @@ struct AddNoteView: View {
                     }
                 }
             } label: {
-                Text("Зберегти")
+                Text(L10n.string("common.action.save"))
                     .font(.system(size: 16, weight: .medium, design: .default))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
