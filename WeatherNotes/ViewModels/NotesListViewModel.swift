@@ -4,7 +4,7 @@ import Foundation
 
 /// Owns list data (`NSFetchedResultsController`) and presentation logic for the notes list.
 @MainActor
-final class NotesListViewModel: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
+final class NotesListViewModel: NSObject, ObservableObject, @preconcurrency NSFetchedResultsControllerDelegate {
     @Published private(set) var notes: [WeatherNote] = []
 
     private let viewContext: NSManagedObjectContext
