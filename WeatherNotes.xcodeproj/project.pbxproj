@@ -8,6 +8,7 @@
 
 /* Begin PBXFileReference section */
 		73AE51102F981BE9001DEA54 /* WeatherNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		73AE51802F981BE9001DEA54 /* WeatherNotesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherNotesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +17,22 @@
 			path = WeatherNotes;
 			sourceTree = "<group>";
 		};
+		73AE51812F981BE9001DEA54 /* WeatherNotesTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WeatherNotesTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		73AE510D2F981BE9001DEA54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73AE51842F981BE9001DEA54 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +46,7 @@
 			isa = PBXGroup;
 			children = (
 				73AE51122F981BE9001DEA54 /* WeatherNotes */,
+				73AE51812F981BE9001DEA54 /* WeatherNotesTests */,
 				73AE51112F981BE9001DEA54 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				73AE51102F981BE9001DEA54 /* WeatherNotes.app */,
+				73AE51802F981BE9001DEA54 /* WeatherNotesTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,7 +85,48 @@
 			productReference = 73AE51102F981BE9001DEA54 /* WeatherNotes.app */;
 			productType = "com.apple.product-type.application";
 		};
+		73AE51822F981BE9001DEA54 /* WeatherNotesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 73AE51882F981BE9001DEA54 /* Build configuration list for PBXNativeTarget "WeatherNotesTests" */;
+			buildPhases = (
+				73AE51832F981BE9001DEA54 /* Sources */,
+				73AE51842F981BE9001DEA54 /* Frameworks */,
+				73AE51852F981BE9001DEA54 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				73AE51862F981BE9001DEA54 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				73AE51812F981BE9001DEA54 /* WeatherNotesTests */,
+			);
+			name = WeatherNotesTests;
+			packageProductDependencies = (
+			);
+			productName = WeatherNotesTests;
+			productReference = 73AE51802F981BE9001DEA54 /* WeatherNotesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		73AE51872F981BE9001DEA54 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 73AE51082F981BE9001DEA54 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 73AE510F2F981BE9001DEA54;
+			remoteInfo = WeatherNotes;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		73AE51862F981BE9001DEA54 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 73AE510F2F981BE9001DEA54 /* WeatherNotes */;
+			targetProxy = 73AE51872F981BE9001DEA54 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXProject section */
 		73AE51082F981BE9001DEA54 /* Project object */ = {
@@ -83,13 +139,18 @@
 					73AE510F2F981BE9001DEA54 = {
 						CreatedOnToolsVersion = 16.2;
 					};
+					73AE51822F981BE9001DEA54 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 73AE510F2F981BE9001DEA54;
+					};
 				};
 			};
 			buildConfigurationList = 73AE510B2F981BE9001DEA54 /* Build configuration list for PBXProject "WeatherNotes" */;
-			developmentRegion = en;
+			developmentRegion = uk;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				uk,
 				Base,
 			);
 			mainGroup = 73AE51072F981BE9001DEA54;
@@ -100,6 +161,7 @@
 			projectRoot = "";
 			targets = (
 				73AE510F2F981BE9001DEA54 /* WeatherNotes */,
+				73AE51822F981BE9001DEA54 /* WeatherNotesTests */,
 			);
 		};
 /* End PBXProject section */
@@ -112,10 +174,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		73AE51852F981BE9001DEA54 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		73AE510C2F981BE9001DEA54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73AE51832F981BE9001DEA54 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -255,6 +331,7 @@
 				DEVELOPMENT_TEAM = 9DKTKE32Q5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.weather";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Щоб показувати актуальну погоду для вашого місця, додатку потрібен доступ до геолокації під час використання.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -268,6 +345,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ritmanow.875788.WeatherNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -285,6 +365,7 @@
 				DEVELOPMENT_TEAM = 9DKTKE32Q5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.weather";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Щоб показувати актуальну погоду для вашого місця, додатку потрібен доступ до геолокації під час використання.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -298,9 +379,62 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ritmanow.875788.WeatherNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		73AE51892F981BE9001DEA54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9DKTKE32Q5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ritmanow.875788.WeatherNotesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WeatherNotes.app/WeatherNotes";
+			};
+			name = Debug;
+		};
+		73AE518A2F981BE9001DEA54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9DKTKE32Q5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ritmanow.875788.WeatherNotesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WeatherNotes.app/WeatherNotes";
 			};
 			name = Release;
 		};
@@ -321,6 +455,15 @@
 			buildConfigurations = (
 				73AE51242F981BEA001DEA54 /* Debug */,
 				73AE51252F981BEA001DEA54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		73AE51882F981BE9001DEA54 /* Build configuration list for PBXNativeTarget "WeatherNotesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73AE51892F981BE9001DEA54 /* Debug */,
+				73AE518A2F981BE9001DEA54 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
