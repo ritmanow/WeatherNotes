@@ -3,7 +3,27 @@
     <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
+    <entity name="WeatherNote" representedClassName="WeatherNote" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="NO" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="text" optional="NO" attributeType="String" usesScalarValueType="NO"/>
+        <attribute name="createdAt" optional="NO" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="temperature" optional="NO" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="feelsLike" optional="NO" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="weatherDescription" optional="NO" attributeType="String" usesScalarValueType="NO"/>
+        <attribute name="weatherMain" optional="NO" attributeType="String" usesScalarValueType="NO"/>
+        <attribute name="owmIconId" optional="YES" attributeType="String" usesScalarValueType="NO"/>
+        <attribute name="humidity" optional="NO" attributeType="Integer 32" usesScalarValueType="YES"/>
+        <attribute name="pressure" optional="NO" attributeType="Integer 32" usesScalarValueType="YES"/>
+        <attribute name="visibilityKm" optional="NO" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="clouds" optional="NO" attributeType="Integer 32" usesScalarValueType="YES"/>
+        <attribute name="windSpeed" optional="NO" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="windDirection" optional="NO" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="locationDisplay" optional="NO" attributeType="String" usesScalarValueType="NO"/>
+        <attribute name="latitude" optional="NO" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="longitude" optional="NO" attributeType="Double" usesScalarValueType="YES"/>
+    </entity>
     <elements>
         <element name="Item" positionX="-63" positionY="-18" width="128" height="44"/>
+        <element name="WeatherNote" positionX="144" positionY="-18" width="128" height="352"/>
     </elements>
 </model>

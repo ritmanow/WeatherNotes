@@ -10,19 +10,14 @@ import CoreData
 struct PersistenceController {
     static let shared = PersistenceController()
 
-    @MainActor
+    /// In-memory stack for SwiftUI previews. Not `@MainActor` so JIT previews do not initialize Core Data off a coordinated path that can leave `@FetchRequest` without a resolved entity.
     static let preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-        }
+        PersistenceController.seedPreviewWeatherNotes(in: viewContext)
         do {
             try viewContext.save()
         } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
@@ -32,7 +27,7 @@ struct PersistenceController {
     let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "WeatherNotes")
+        container = NSPersistentContainer(name: "WeatherNotes", managedObjectModel: Self.managedObjectModel)
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
@@ -53,5 +48,37 @@ struct PersistenceController {
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+
+    private static let managedObjectModel: NSManagedObjectModel = {
+        let bundle = Bundle.main
+        guard let modelURL = bundle.url(forResource: "WeatherNotes", withExtension: "momd") else {
+            preconditionFailure("Missing WeatherNotes.momd in \(bundle.bundlePath)")
+        }
+        guard let model = NSManagedObjectModel(contentsOf: modelURL) else {
+            preconditionFailure("Could not load Core Data model at \(modelURL)")
+        }
+        return model
+    }()
+
+    private static func seedPreviewWeatherNotes(in context: NSManagedObjectContext) {
+        let sample = WeatherNote(context: context)
+        sample.id = UUID()
+        sample.createdAt = Date()
+        sample.text = "Preview sample — sunny walk"
+        sample.temperature = 21
+        sample.feelsLike = 20
+        sample.weatherDescription = "clear sky"
+        sample.weatherMain = "Clear"
+        sample.owmIconId = "01d"
+        sample.humidity = 55
+        sample.pressure = 1012
+        sample.visibilityKm = 10
+        sample.clouds = 0
+        sample.windSpeed = 3.2
+        sample.windDirection = 180
+        sample.locationDisplay = "Preview City"
+        sample.latitude = 50.45
+        sample.longitude = 30.52
     }
 }

@@ -1,0 +1,8 @@
+// Скопіюйте вміст у новий файл `WeatherNotes/OpenWeatherAPIKey.swift` (той шлях у .gitignore).
+// Файл з реальним ключем не комітьте.
+
+import Foundation
+
+enum OpenWeatherAPIKey {
+    static let value: String = "PASTE_YOUR_OPENWEATHER_API_KEY_HERE"
+}

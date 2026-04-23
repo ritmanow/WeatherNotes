@@ -36,3 +36,14 @@ fastlane/test_output
 # IDEs
 *.swp
 *~
+
+# Local dev only (do not commit)
+WEATHER_NOTES_SOURCE_OF_TRUTH.md
+WEATHER_NOTES_DESIGN_SOURCE_OF_TRUTH.md
+WeatherNotes/OpenWeatherAPIKey.swift
+Secrets.xcconfig
+
+# Local Xcode DerivedData copies (optional)
+.derivedData/
+.derivedDataBuild/
+.derivedDataBuild2/
