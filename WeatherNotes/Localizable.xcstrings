@@ -1,1405 +1,1465 @@
 {
-  "sourceLanguage": "uk",
-  "strings": {
-    " · ": {},
-    "—": {},
-    "%@: ": {},
-    "%lld/%lld": {
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$lld/%2$lld"
+  "sourceLanguage" : "uk",
+  "strings" : {
+    "—" : {
+
+    },
+    "%@: " : {
+
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld/%2$lld"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "%lld°" : {
+
+    },
+    "•" : {
+
+    },
+    "💡" : {
+
+    },
+    "add_note.error.generic" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something went wrong. Please try again."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сталася помилка. Спробуйте ще раз."
+          }
+        }
+      }
+    },
+    "add_note.error.save_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't save the note. Please try again."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не вдалося зберегти нотатку. Спробуйте ще раз."
+          }
+        }
+      }
+    },
+    "add_note.error.weather_fallback" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't fetch weather."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$lld/%2$lld"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не вдалося отримати погоду."
           }
         }
       }
     },
-    "%lld°": {},
-    "•": {},
-    "💡": {},
-    "add_note.error.generic": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сталася помилка. Спробуйте ще раз."
+    "add_note.error.alert_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Something went wrong. Please try again."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Помилка"
           }
         }
       }
     },
-    "add_note.error.save_failed": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Не вдалося зберегти нотатку. Спробуйте ще раз."
+    "add_note.field.activity_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What did you do?"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn't save the note. Please try again."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Що ви робили?"
           }
         }
       }
     },
-    "add_note.error.weather_fallback": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Не вдалося отримати погоду."
+    "add_note.field.note.accessibility" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Note"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn't fetch weather."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нотатка"
           }
         }
       }
     },
-    "add_note.field.activity_label": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Що ви робили?"
+    "add_note.field.note.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. jog, commute, walk in the park…"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "What did you do?"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "напр. пробіжка, дорога в офіс, прогулянка у парку…"
           }
         }
       }
     },
-    "add_note.field.note.accessibility": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Нотатка"
+    "add_note.info.body.prefix" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weather data for "
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Note"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Погодні дані для "
           }
         }
       }
     },
-    "add_note.field.note.placeholder": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "напр. пробіжка, дорога в офіс, прогулянка у парку…"
+    "add_note.info.body.suffix" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " will be fetched and saved with the note."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e.g. jog, commute, walk in the park…"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " будуть отримано та збережено разом з нотаткою."
           }
         }
       }
     },
-    "add_note.info.body.prefix": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Погодні дані для "
+    "add_note.info.grid.humidity_pressure" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Humidity and pressure"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weather data for "
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вологість і тиск"
           }
         }
       }
     },
-    "add_note.info.body.suffix": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " будуть отримано та збережено разом з нотаткою."
+    "add_note.info.grid.temperature_conditions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temperature and conditions"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " will be fetched and saved with the note."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Температура та умови"
           }
         }
       }
     },
-    "add_note.info.grid.humidity_pressure": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Вологість і тиск"
+    "add_note.info.grid.visibility_clouds" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visibility and cloud cover"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Humidity and pressure"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Видимість і хмарність"
           }
         }
       }
     },
-    "add_note.info.grid.temperature_conditions": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Температура та умови"
+    "add_note.info.grid.wind" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wind speed and direction"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Temperature and conditions"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Швидкість і напрям вітру"
           }
         }
       }
     },
-    "add_note.info.grid.visibility_clouds": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Видимість і хмарність"
+    "add_note.info.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic weather capture"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Visibility and cloud cover"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Автоматичний знімок погоди"
           }
         }
       }
     },
-    "add_note.info.grid.wind": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Швидкість і напрям вітру"
+    "add_note.loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fetching weather and saving…"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wind speed and direction"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отримуємо погоду та зберігаємо..."
           }
         }
       }
     },
-    "add_note.info.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Автоматичний знімок погоди"
+    "add_note.location.highlight.current" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "your current location"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automatic weather capture"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "вашого розташування"
           }
         }
       }
     },
-    "add_note.loading": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Отримуємо погоду та зберігаємо..."
+    "add_note.location.highlight.kyiv" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kyiv, Ukraine"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fetching weather and saving…"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Київ, Україна"
           }
         }
       }
     },
-    "add_note.location.highlight.current": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "вашого розташування"
+    "add_note.save_flow.weather_timeout" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The weather service isn't responding. Please try again."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "your current location"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервіс погоди не відповідає. Спробуйте ще раз."
           }
         }
       }
     },
-    "add_note.location.highlight.kyiv": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Київ, Україна"
+    "add_note.tips.activity" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Describe your activity in more detail"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kyiv, Ukraine"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Опишіть свою активність детальніше"
           }
         }
       }
     },
-    "add_note.save_flow.weather_timeout": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сервіс погоди не відповідає. Спробуйте ще раз."
+    "add_note.tips.capture" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weather is captured when you save"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The weather service isn't responding. Please try again."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Погодні дані знімаються в момент збереження"
           }
         }
       }
     },
-    "add_note.tips.activity": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Опишіть свою активність детальніше"
+    "add_note.tips.storage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notes are stored on your device"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Describe your activity in more detail"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нотатки зберігаються на вашому пристрої"
           }
         }
       }
     },
-    "add_note.tips.capture": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Погодні дані знімаються в момент збереження"
+    "add_note.tips.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tips"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weather is captured when you save"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Підказки"
           }
         }
       }
     },
-    "add_note.tips.storage": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Нотатки зберігаються на вашому пристрої"
+    "add_note.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New note"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notes are stored on your device"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нова нотатка"
           }
         }
       }
     },
-    "add_note.tips.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Підказки"
+    "add_note.weather_source.current_location" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your geolocation will be used"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tips"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Буде використано вашу геолокацію"
           }
         }
       }
     },
-    "add_note.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Нова нотатка"
+    "add_note.weather_source.fallback_kyiv" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geolocation unavailable; using Kyiv."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New note"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Геолокація недоступна, використовуємо Київ"
           }
         }
       }
     },
-    "add_note.weather_source.current_location": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Буде використано вашу геолокацію"
+    "add_note.weather_source.substring.geolocation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "geolocation"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your geolocation will be used"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "геолокацію"
           }
         }
       }
     },
-    "add_note.weather_source.fallback_kyiv": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Геолокація недоступна, використовуємо Київ"
+    "add_note.weather_source.substring.kyiv" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kyiv"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Geolocation unavailable; using Kyiv."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Київ"
           }
         }
       }
     },
-    "add_note.weather_source.substring.geolocation": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "геолокацію"
+    "common.accessibility.back" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "geolocation"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Назад"
           }
         }
       }
     },
-    "add_note.weather_source.substring.kyiv": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Київ"
+    "common.action.save" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kyiv"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Зберегти"
           }
         }
       }
     },
-    "common.accessibility.back": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Назад"
+    "common.action.ok" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Back"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Гаразд"
           }
         }
       }
     },
-    "common.action.save": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Зберегти"
+    "common.relative.today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сьогодні"
           }
         }
       }
     },
-    "common.relative.today": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сьогодні"
+    "common.relative.yesterday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yesterday"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Today"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вчора"
           }
         }
       }
     },
-    "common.relative.yesterday": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Вчора"
+    "note_detail.coordinates.latitude" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latitude"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yesterday"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Широта"
           }
         }
       }
     },
-    "note_detail.coordinates.latitude": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Широта"
+    "note_detail.coordinates.longitude" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Longitude"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Latitude"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Довгота"
           }
         }
       }
     },
-    "note_detail.coordinates.longitude": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Довгота"
+    "note_detail.coordinates.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location coordinates"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Longitude"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Координати локації"
           }
         }
       }
     },
-    "note_detail.coordinates.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Координати локації"
+    "note_detail.hero.feels_like_format" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feels like %lld°"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Location coordinates"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відчувається як %lld°"
           }
         }
       }
     },
-    "note_detail.hero.feels_like_format": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Відчувається як %lld°"
+    "note_detail.metric.clouds" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cloud cover"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Feels like %lld°"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Хмарність"
           }
         }
       }
     },
-    "note_detail.metric.clouds": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Хмарність"
+    "note_detail.metric.humidity" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Humidity"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cloud cover"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вологість"
           }
         }
       }
     },
-    "note_detail.metric.humidity": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Вологість"
+    "note_detail.metric.pressure" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pressure"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Humidity"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тиск"
           }
         }
       }
     },
-    "note_detail.metric.pressure": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Тиск"
+    "note_detail.metric.pressure.unit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " hPa"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pressure"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " гПа"
           }
         }
       }
     },
-    "note_detail.metric.pressure.unit": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " гПа"
+    "note_detail.metric.visibility" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visibility"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " hPa"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Видимість"
           }
         }
       }
     },
-    "note_detail.metric.visibility": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Видимість"
+    "note_detail.metric.visibility.unit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " km"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Visibility"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " км"
           }
         }
       }
     },
-    "note_detail.metric.visibility.unit": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " км"
+    "note_detail.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Note details"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " km"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Деталі нотатки"
           }
         }
       }
     },
-    "note_detail.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Деталі нотатки"
+    "note_detail.wind_compass.accessibility" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wind direction"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Note details"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Напрямок вітру"
           }
         }
       }
     },
-    "note_detail.wind_compass.accessibility": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Напрямок вітру"
+    "note_detail.wind.direction_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Direction"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wind direction"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Напрямок"
           }
         }
       }
     },
-    "note_detail.wind.direction_label": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Напрямок"
+    "note_detail.wind.speed_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Direction"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Швидкість"
           }
         }
       }
     },
-    "note_detail.wind.speed_label": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Швидкість"
+    "note_detail.wind.speed.unit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m/s"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Speed"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "м/с"
           }
         }
       }
     },
-    "note_detail.wind.speed.unit": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "м/с"
+    "note_detail.wind.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed and direction"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "m/s"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Швидкість і напрямок"
           }
         }
       }
     },
-    "note_detail.wind.subtitle": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Швидкість і напрямок"
+    "note_detail.wind.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wind"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Speed and direction"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вітер"
           }
         }
       }
     },
-    "note_detail.wind.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Вітер"
+    "notes_list.action.add.accessibility" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add note"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wind"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Додати нотатку"
           }
         }
       }
     },
-    "notes_list.action.add.accessibility": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Додати нотатку"
+    "notes_list.action.delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete note"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add note"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Видалити нотатку"
           }
         }
       }
     },
-    "notes_list.count.note.few": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "нотатки"
+    "notes_list.count.note.few" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "notes"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "notes"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "нотатки"
           }
         }
       }
     },
-    "notes_list.count.note.many": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "нотаток"
+    "notes_list.count.note.many" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "notes"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "notes"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "нотаток"
           }
         }
       }
     },
-    "notes_list.count.note.one": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "нотатка"
+    "notes_list.count.note.one" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "note"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "note"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "нотатка"
           }
         }
       }
     },
-    "notes_list.empty.body": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Натисніть кнопку з «+» у правому верхньому куті, щоб створити нотатку з погодою."
+    "notes_list.empty.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap the “+” button in the top-right corner to create a note with weather."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap the “+” button in the top-right corner to create a note with weather."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Натисніть кнопку з «+» у правому верхньому куті, щоб створити нотатку з погодою."
           }
         }
       }
     },
-    "notes_list.empty.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ще немає нотаток"
+    "notes_list.empty.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No notes yet"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No notes yet"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ще немає нотаток"
           }
         }
       }
     },
-    "notes_list.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Погодні нотатки"
+    "notes_list.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weather notes"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weather notes"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Погодні нотатки"
           }
         }
       }
     },
-    "preview.seed.location_display": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Тестове місто (прев’ю)"
+    "preview.seed.location_display" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test city (preview)"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Test city (preview)"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тестове місто (прев’ю)"
           }
         }
       }
     },
-    "preview.seed.note_text": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Приклад нотатки для прев’ю — сонячна прогулянка"
+    "preview.seed.note_text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preview sample note — sunny walk"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Preview sample note — sunny walk"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Приклад нотатки для прев’ю — сонячна прогулянка"
           }
         }
       }
     },
-    "preview.seed.weather_description": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ясне небо"
+    "preview.seed.weather_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "clear sky"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "clear sky"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ясне небо"
           }
         }
       }
     },
-    "theme.accessibility.dark": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Тема: темна"
+    "theme.accessibility.dark" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theme: dark"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Theme: dark"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тема: темна"
           }
         }
       }
     },
-    "theme.accessibility.light": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Тема: світла"
+    "theme.accessibility.light" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theme: light"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Theme: light"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тема: світла"
           }
         }
       }
     },
-    "theme.accessibility.system": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Тема: системна"
+    "theme.accessibility.system" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theme: system"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Theme: system"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тема: системна"
           }
         }
       }
     },
-    "weather_service.error.decoding_failed": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Не вдалося прочитати відповідь про погоду."
+    "weather_service.error.decoding_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't read the weather response."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn't read the weather response."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не вдалося прочитати відповідь про погоду."
           }
         }
       }
     },
-    "weather_service.error.http_status_format": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Запит погоди не вдався (HTTP %lld)."
+    "weather_service.error.http_status_format" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weather request failed (HTTP %lld)."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weather request failed (HTTP %lld)."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запит погоди не вдався (HTTP %lld)."
           }
         }
       }
     },
-    "weather_service.error.invalid_response": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сервер повернув неочікувану відповідь."
+    "weather_service.error.invalid_response" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The server returned an unexpected response."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The server returned an unexpected response."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервер повернув неочікувану відповідь."
           }
         }
       }
     },
-    "weather_service.error.invalid_url": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Не вдалося сформувати запит погоди."
+    "weather_service.error.invalid_url" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't build the weather request."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn't build the weather request."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не вдалося сформувати запит погоди."
           }
         }
       }
     },
-    "weather_service.error.missing_api_key": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Не налаштовано ключ API OpenWeather."
+    "weather_service.error.missing_api_key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenWeather API key is not configured."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OpenWeather API key is not configured."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не налаштовано ключ API OpenWeather."
           }
         }
       }
     },
-    "weather_service.error.missing_payload": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "У відповіді немає даних про погоду."
+    "weather_service.error.missing_payload" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The response doesn't include weather data."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The response doesn't include weather data."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "У відповіді немає даних про погоду."
           }
         }
       }
     },
-    "weather_service.error.network.cancelled": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Запит скасовано."
+    "weather_service.error.network.cancelled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The request was cancelled."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The request was cancelled."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запит скасовано."
           }
         }
       }
     },
-    "weather_service.error.network.connection_lost": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "З’єднання з мережею втрачено."
+    "weather_service.error.network.connection_lost" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The network connection was lost."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The network connection was lost."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "З’єднання з мережею втрачено."
           }
         }
       }
     },
-    "weather_service.error.network.generic": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Помилка мережі. Перевірте підключення та спробуйте ще раз."
+    "weather_service.error.network.generic" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Network error. Check your connection and try again."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Network error. Check your connection and try again."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Помилка мережі. Перевірте підключення та спробуйте ще раз."
           }
         }
       }
     },
-    "weather_service.error.network.host_not_found": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Не вдалося знайти сервер погоди."
+    "weather_service.error.network.host_not_found" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't reach the weather server."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn't reach the weather server."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не вдалося знайти сервер погоди."
           }
         }
       }
     },
-    "weather_service.error.network.offline": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Немає підключення до Інтернету."
+    "weather_service.error.network.offline" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No internet connection."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No internet connection."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Немає підключення до Інтернету."
           }
         }
       }
     },
-    "weather_service.error.network.secure_connection_failed": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Не вдалося встановити захищене з’єднання."
+    "weather_service.error.network.secure_connection_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't establish a secure connection."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn't establish a secure connection."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не вдалося встановити захищене з’єднання."
           }
         }
       }
     },
-    "weather_service.error.network.timeout": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Час очікування мережі вичерпано."
+    "weather_service.error.network.timeout" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The network request timed out."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The network request timed out."
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Час очікування мережі вичерпано."
           }
         }
       }
     },
-    "wind.octant.e": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "С"
+    "wind.octant.e" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "E"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "С"
           }
         }
       }
     },
-    "wind.octant.n": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Пн"
+    "wind.octant.n" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "N"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "N"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пн"
           }
         }
       }
     },
-    "wind.octant.ne": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ПнС"
+    "wind.octant.ne" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NE"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "NE"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ПнС"
           }
         }
       }
     },
-    "wind.octant.nw": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ПнЗ"
+    "wind.octant.nw" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NW"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "NW"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ПнЗ"
           }
         }
       }
     },
-    "wind.octant.s": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Пд"
+    "wind.octant.s" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "S"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пд"
           }
         }
       }
     },
-    "wind.octant.se": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ПдС"
+    "wind.octant.se" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SE"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SE"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ПдС"
           }
         }
       }
     },
-    "wind.octant.sw": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ПдЗ"
+    "wind.octant.sw" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SW"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SW"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ПдЗ"
           }
         }
       }
     },
-    "wind.octant.w": {
-      "extractionState": "manual",
-      "localizations": {
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "З"
+    "wind.octant.w" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "W"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "W"
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "З"
           }
         }
       }
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }
